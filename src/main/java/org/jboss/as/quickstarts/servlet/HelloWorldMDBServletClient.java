@@ -36,6 +36,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+// create a jdbc data source to store users and msgs
+// import org.h2.jdbcx.JdbcConnectionPool;
+// import javax.naming.Context;
+// import javax.naming.InitialContext;
 /**
  * Definition of the two JMS destinations used by the quickstart
  * (one queue and one topic).
@@ -73,20 +77,6 @@ public class HelloWorldMDBServletClient extends HttpServlet {
 
     private static final int MSG_COUNT = 5;
 
-    private Connection db;
-
-    public HelloWorldMDBServletClient() {
-        db = null;
-        try {
-            Class.forName("org.sqlite.JDBC");
-            db = DriverManager.getConnection("jdbc:sqlite:test.db");
-        } catch ( Exception e ) {
-            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-            System.exit(0);
-        }
-        System.out.println("Opened database successfully");
-    }
-
     @Inject
     private JMSContext context;
 
@@ -112,24 +102,8 @@ public class HelloWorldMDBServletClient extends HttpServlet {
                 context.createProducer().send(destination, text);
                 out.write("Message (" + i + "): " + text + "</br>");
             }
-
             out.write("<h2>Following messages have been received:</h2>");
-
-            // Fetch messages from db
-            Statement stmt = this.db.createStatement();
-            ResultSet rs = stmt.executeQuery( "SELECT * FROM Messages;" );
-            while ( rs.next() ) {
-                String text = "This is message " + rs.getInt("id");
-                out.write("Message (" + rs.getInt("id") + "): " + rs.getString("message") + "</br>");
-            }
-            rs.close();
-            stmt.close();
-            db.close();
-            // DB end
-
             out.write("<p><i>Go to your WildFly Server console or Server log to see the result of messages processing</i></p>");
-        } catch (SQLException e) {
-            e.printStackTrace();
         } finally {
             if (out != null) {
                 out.close();
@@ -152,17 +126,8 @@ public class HelloWorldMDBServletClient extends HttpServlet {
         try {
             boolean useTopic = req.getParameterMap().keySet().contains("topic");
             final Destination destination = useTopic ? topic : queue;
-
-            // Add String data to DB messages table
-            PreparedStatement stmt = this.db.prepareStatement("INSERT INTO Messages (text) VALUES (?)");
-            stmt.setString(1,data);
-            stmt.executeUpdate();
-            // End DB
-
             context.createProducer().send(destination, data);
             out.write("Message (" + data + "): </br>");
-        } catch (SQLException e) {
-            e.printStackTrace();
         } finally {
             if (out != null) {
                 out.close();
