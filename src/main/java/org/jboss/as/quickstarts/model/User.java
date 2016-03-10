@@ -14,6 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+
+
 package org.jboss.as.quickstarts.model;
 
 
@@ -102,7 +105,7 @@ public class User implements Serializable {
     public void setUseranme(String username) {
       this.username = username;
     }
-    
+
     // set password
     public void setPassword(String password) {
       this.password = password;
