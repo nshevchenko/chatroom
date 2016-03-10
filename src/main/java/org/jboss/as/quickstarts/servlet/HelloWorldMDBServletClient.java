@@ -36,6 +36,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.jboss.as.quickstarts.model.User;
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+
 // create a jdbc data source to store users and msgs
 // import org.h2.jdbcx.JdbcConnectionPool;
 // import javax.naming.Context;
@@ -78,6 +82,9 @@ public class HelloWorldMDBServletClient extends HttpServlet {
     private static final int MSG_COUNT = 5;
 
     @Inject
+    private EntityManager entityManager;
+
+    @Inject
     private JMSContext context;
 
     @Resource(lookup = "java:/queue/HELLOWORLDMDBQueue")
@@ -91,10 +98,17 @@ public class HelloWorldMDBServletClient extends HttpServlet {
         resp.setContentType("text/html");
         PrintWriter out = resp.getWriter();
         out.write("<h1>Quickstart: Example demonstrates the use of <strong>JMS 2.0</strong> and <strong>EJB 3.2 Message-Driven Bean</strong> in WildFly.</h1>");
+
+
         try {
             boolean useTopic = req.getParameterMap().keySet().contains("topic");
             final Destination destination = useTopic ? topic : queue;
 
+            Query query = entityManager.createQuery("select u from User u where u.username = :username");
+            query.setParameter("username", "nik");
+            User user = (User) query.getSingleResult();
+            out.write("<p>Sending messages to <em>" + user.getPassword() + "</em></p>");
+            
             out.write("<p>Sending messages to <em>" + destination + "</em></p>");
             out.write("<h2>Following messages will be send to the destination:</h2>");
             for (int i = 0; i < MSG_COUNT; i++) {

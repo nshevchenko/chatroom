@@ -34,7 +34,7 @@ import javax.persistence.Table;
  */
 
 @Entity
-@Table(name="chatmessage")
+@Table(name="CHATMESSAGE")
 public class ChatMessage implements Serializable {
 
     private int id;

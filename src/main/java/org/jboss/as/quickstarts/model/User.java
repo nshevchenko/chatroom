@@ -34,45 +34,88 @@ import javax.persistence.Table;
  */
 
 @Entity
-@Table(name="user")
+@Table(name="USERS")
 public class User implements Serializable {
 
-    private int id;
-    private String name;
 
+    @Id
+    @GeneratedValue
+    private int id;     // primary key ID
+
+    @Column(unique = true)
+    private String username;    //username
+
+    private String password;    // password
+
+    private boolean loggedIn;   // session information
+
+
+    // empty constructor
     public User(){}
 
-    public User(String name){
-      this.name = name;
+
+    // Constructor with username and password
+    public User(String username, String password){
+      this.username = username;
+      this.password = password;
+      this.loggedIn = false;
     }
 
 
+    // Construtor with all user fields
+    public User(String username, String password, boolean loggedIn){
+      this.username = username;
+      this.password = password;
+      this.loggedIn = loggedIn;
+    }
+
     //  GETTERS
 
-    @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Column(name="user_id")
+    // get ID
     public int getId() {
       return id;
     }
 
-    public String getName() {
-      return name;
+    // get username
+    public String getUsername() {
+      return username;
+    }
+
+    // get username
+    public String getPassword() {
+      return password;
+    }
+
+    // get username
+    public boolean getLoggedIn() {
+      return loggedIn;
     }
 
     // SETTERS
 
+    // set id
     public void setId(int id) {
       this.id = id;
     }
 
-    public void setName(String name) {
-      this.name = name;
+    //set username
+    public void setUseranme(String username) {
+      this.username = username;
+    }
+    
+    // set password
+    public void setPassword(String password) {
+      this.password = password;
+    }
+
+    // set if user is logged in
+    public void setLoggedIn(boolean loggedIn) {
+      this.loggedIn = loggedIn;
     }
 
     // UTIL METHODS
 
     public String toString(){
-      return id + " " + name;
+      return id + " " + username;
     }
 }
