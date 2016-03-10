@@ -110,10 +110,12 @@ textarea {
 
 /* Container for main section of the page (upper left) */
 .chat-container {
-  float: left;
-  width: 83%;
-  overflow-y:scroll;
-  margin-bottom: 22px;
+    float: left;
+    width: 82%;
+    overflow-y:scroll;
+    margin-bottom: 22px;
+    margin-left: 10px;
+    margin-top: 12px;
 }
 .chat-message-container {
 
@@ -138,15 +140,17 @@ textarea {
 
 /* Container for input field at the very bottom */
 .input-container {
-  bottom: 0;
-  position:fixed;
-  width: 100%;
-  background-color: #
+    bottom: 0;
+    position:fixed;
+    width: 100%;
+    margin-left: 10px;
+}
+.input-prompt {
 }
 .input-form-element {
-  width: 100%;
-  background-color: #262626;
-  border: none;
+    width: 100%;
+    background-color: #262626;
+    border: none;
 }
 .input-form-element:focus {
   outline-width: 0;

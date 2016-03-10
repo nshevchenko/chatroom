@@ -22,14 +22,17 @@ $('.input-form').submit(function(e) {
     // Srip the '/' and run through the different available commands
     switch(input.substring(1).split(' ')[0]) {
       case 'help':
-        cmdHelp(input);
-        break;
+          cmdHelp(input);
+          break;
       case 'login':
-        cmdLogin(input);
-        break;
+          cmdLogin(input);
+          break;
+      case 'logout':
+          cmdLogout(input);
+          break;
       case 'register':
-        cmdRegister(input);
-        break;
+          cmdRegister(input);
+          break;
 
     }
   // If it doesn't start with a '/', than it's a chat message
@@ -46,9 +49,10 @@ $('.input-form').submit(function(e) {
 function cmdHelp(input) {
   input = input.substring(1).split(' ');
 
-  var help     = "- /help - shows you this listing<br/>";
-  var login    = "- /login [username] [password] - to login to the chat<br/>";
-  var register = "- /register [username] [password] - to register<br/>";
+    var help     = "- /help - shows you this listing<br/>";
+    var login    = "- /login [username] [password] - to login to the chat<br/>";
+    var logout   = "- /logout - to disconnect from the chat<br/>";
+    var register = "- /register [username] [password] - to register<br/>";
 
   var response = "";
 
@@ -56,15 +60,19 @@ function cmdHelp(input) {
     response = "Here are the available commands:<br/>"
       + help
       + login
+      + logout
       + register;
   } else {
     switch(input[1]) {
-      case 'login':
-        response = login;
-        break;
-      case 'register':
-        response = register;
-        break;
+        case 'login':
+            response = login;
+            break;
+        case 'register':
+            response = register;
+            break;
+        case 'logout':
+            response = logout;
+            break;
     }
   }
   addToChat('',response,true);
@@ -80,7 +88,7 @@ function cmdLogin(input) {
     var post_login = postLogin(input[1], input[2]);
     if(post_login) {
       addToChat('','Login successfull',false);
-      initiateChat();
+      initiateChat(input[1]);
     } else {
       addToChat('','Login failed, try again',false);
     }
@@ -94,8 +102,35 @@ function cmdLogin(input) {
 function postLogin(username, password) {
   $.post( "/wildfly-helloworld-mdb/auth", JSON.stringify({ "username": username, "password": password }))
       .done(function( data ) {
-        console.log('Response from auth post: ' + data);
+        console.log('Response from auth login post: ' + data.toString());
       });
+
+    // dev only until response is parsed
+    return true;
+}
+
+function cmdLogout(input) {
+    input = input.substring(1).split(' ');
+    // Check that username and password was supplied
+    var response = "/logout";
+    addToChat('',response,false);
+    var post_logout = postLogout();
+    if(post_logout) {
+        addToChat('','Logout successfull',false);
+        ceaseChat();
+    } else {
+        addToChat('','Logout failed, try again',false);
+    }
+}
+
+function postLogout() {
+    $.post( "/wildfly-helloworld-mdb/auth?logout")
+        .done(function( data ) {
+            console.log('Response from auth logout post: ' + data);
+        });
+
+    // dev only until response is parsed
+    return true;
 }
 
 /* Called when /register */
@@ -187,12 +222,55 @@ function showWelcome() {
   cmdHelp('/help');
 }
 
-function initiateChat() {
-    // Load in the online users
+
+function initiateChat(username) {
+
+    // Load in the online users, should include itself
     var online_users = getOnlineUsers();
     // foreach user, addToUsers(user)
+        // code
+
+    // Set input prompt to be the username
+    console.log('Setting prompt to: '+ username);
+    $('.input-prompt').text(username + ">");
+
+    // Starting message listener
+    manageMessageListener(true);
+}
+
+var interval = null;
+
+function manageMessageListener(start) {
+    if(start) {
+        interval = setInterval(messageListener, 500);
+    } else {
+        clearInterval(interval);
+    }
+}
+
+function messageListener() {
+    console.log('Message Listener: Checking for new messages');
+}
+
+function ceaseChat() {
+    // Reset the users prompt
+    $('.input-prompt').text('>');
+
+    // Remove all users from users list
+    $('.users-container ul li').each(function(index) {
+        this.remove();
+    });
+
+    // Set online user counter to 0
+    $('.users-online').text('0');
+
+    // Stop message listener
+    manageMessageListener(false);
 }
 
 function getOnlineUsers() {
-
+    $.post( "/wildfly-helloworld-mdb/getOnlineUsers")
+        .done(function( data ) {
+            console.log('Response from message post: ' + data);
+        });
 }
