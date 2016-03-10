@@ -1,6 +1,7 @@
 $(document).ready(function() {
   console.log('==[ INITIATING AJAX CHAT INTERFACE ]==');
   // Focus on the input field
+  showWelcome();
   $('.input-form-element').focus();
   $('body').scrollTop(1E10);
 });
@@ -34,10 +35,8 @@ $('.input-form').submit(function(e) {
   // If it doesn't start with a '/', than it's a chat message
   } else {
     console.log('CHAT MESSAGE DETECTED');
-    console.log('Sending POST to /auth');
-
+    console.log('Sending POST to /message');
     postMessage(input);
-
   }
 
   return false;
@@ -77,13 +76,26 @@ function cmdLogin(input) {
   // Check that username and password was supplied
   if(input[1] && input[2]) {
     var response = "/login "+input[1]+" &#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;";
-    var post_login = postLogin(input[1], input[2]);
     addToChat('',response,false);
+    var post_login = postLogin(input[1], input[2]);
+    if(post_login) {
+      addToChat('','Login successfull',false);
+      initiateChat();
+    } else {
+      addToChat('','Login failed, try again',false);
+    }
   } else {
     // if not show the help for /login
     input = '/help login';
     cmdHelp(input);
   }
+}
+
+function postLogin(username, password) {
+  $.post( "/wildfly-helloworld-mdb/auth", JSON.stringify({ "username": username, "password": password }))
+      .done(function( data ) {
+        console.log('Response from auth post: ' + data);
+      });
 }
 
 /* Called when /register */
@@ -92,12 +104,20 @@ function cmdRegister(input) {
   // Check that username and password was supplied
   if(input[1] && input[2]) {
     var response = "/register "+input[1]+" &#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;";
+    var post_register = postRegister(input[1], input[2]);
     addToChat('',response,false);
   } else {
     // if not show the help for /login
     input = '/help register';
     cmdHelp(input);
   }
+}
+
+function postRegister(username, password) {
+  $.post( "/wildfly-helloworld-mdb/register", JSON.stringify({ "username": username, "password": password }))
+      .done(function( data ) {
+        console.log('Response from register post: ' + data);
+      });
 }
 
 /* Takes an author, string, and boolean for server-message and posts it to
@@ -119,34 +139,60 @@ function addToChat(author, message, id) {
   $('body').scrollTop(1E10);
 }
 
-function postMessage(input) {
-  console.log(input);
-}
-
-function postLogin(username, password) {
-  $.post( "/wildfly-helloworld-mdb/auth", { username: username, password: password })
+function postMessage(message) {
+  $.post( "/wildfly-helloworld-mdb/message", { message: message })
       .done(function( data ) {
-        console.log('Response from login post: ' + data);
+        console.log('Response from message post: ' + data);
       });
 }
 
+/*
+* Adding a user to the list of users
+* */
 function addToUsers(user) {
   // Add the username to the list of users
   $('.users-container ul').append('<li>'+user+'</li>');
 
   // Increment the counter of online users
-
   var users_online = $('.users-online').text();
   users_online = parseInt(users_online);
   users_online++;
   $('.users-online').text(users_online.toString());
+}
 
-};
-
+/*
+* Removing a user from the list of users
+* */
 function removeUser(user) {
+  // Remove the user from the list of users
   $('.users-container ul li').each(function(index) {
     if($(this).text() == user) {
       this.remove();
     }
   });
+
+  // Decrement the users logged in counter
+  var users_online = $('.users-online').text();
+  users_online = parseInt(users_online);
+  users_online--;
+  $('.users-online').text(users_online.toString());
+}
+
+/*
+* Welcome message that is shown when the chat is first fired up.
+* The user doesn't have to be logged in to view this.
+* */
+function showWelcome() {
+  addToChat('','Welcome to the chat!');
+  cmdHelp('/help');
+}
+
+function initiateChat() {
+    // Load in the online users
+    var online_users = getOnlineUsers();
+    // foreach user, addToUsers(user)
+}
+
+function getOnlineUsers() {
+
 }

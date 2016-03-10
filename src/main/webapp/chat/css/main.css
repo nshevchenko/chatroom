@@ -111,8 +111,8 @@ textarea {
 /* Container for main section of the page (upper left) */
 .chat-container {
   float: left;
-  width: 80%;
-  overflow:scroll;
+  width: 83%;
+  overflow-y:scroll;
   margin-bottom: 22px;
 }
 .chat-message-container {
