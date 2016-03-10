@@ -19,7 +19,7 @@ package org.jboss.as.quickstarts.servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.BufferedReader;
-import java.sql.*;
+
 
 
 import javax.annotation.Resource;
