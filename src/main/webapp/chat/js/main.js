@@ -53,6 +53,8 @@ function cmdHelp(input) {
     var login    = "- /login [username] [password] - to login to the chat<br/>";
     var logout   = "- /logout - to disconnect from the chat<br/>";
     var register = "- /register [username] [password] - to register<br/>";
+    var privacy  = "- /privacy {selective,everyone,noone} - choose who can see that you're online<br/>"
+                 + "  /private selective";
 
   var response = "";
 
@@ -61,7 +63,8 @@ function cmdHelp(input) {
       + help
       + login
       + logout
-      + register;
+      + register
+      + privacy;
   } else {
     switch(input[1]) {
         case 'login':
@@ -72,6 +75,9 @@ function cmdHelp(input) {
             break;
         case 'logout':
             response = logout;
+            break;
+        case 'privacy':
+            response = privacy;
             break;
     }
   }
@@ -103,7 +109,7 @@ function postLogin(username, password) {
   $.post( "/wildfly-helloworld-mdb/auth", JSON.stringify({ "username": username, "password": password }))
       .done(function( data ) {
         console.log('Response from auth login post: ' + data.toString());
-      });
+      },"json");
 
     // dev only until response is parsed
     return true;
@@ -138,9 +144,14 @@ function cmdRegister(input) {
   input = input.substring(1).split(' ');
   // Check that username and password was supplied
   if(input[1] && input[2]) {
-    var response = "/register "+input[1]+" &#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;";
-    var post_register = postRegister(input[1], input[2]);
-    addToChat('',response,false);
+      var response = "/register "+input[1]+" &#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;";
+      addToChat('',response,false);
+      var post_register = postRegister(input[1], input[2]);
+      if(post_register) {
+          addToChat('','Registration successfull! Try to login :)',false);
+      } else {
+          addToChat('','Registration failed! Try another username.',false);
+      }
   } else {
     // if not show the help for /login
     input = '/help register';
@@ -153,6 +164,9 @@ function postRegister(username, password) {
       .done(function( data ) {
         console.log('Response from register post: ' + data);
       });
+
+    // dev until parse response
+    return true;
 }
 
 /* Takes an author, string, and boolean for server-message and posts it to
