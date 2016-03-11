@@ -27,7 +27,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
+import java.util.*;
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import javax.persistence.NoResultException;
 /**
  * Definition of the chat Message entity
  * Contains:
@@ -121,4 +124,31 @@ public class User implements Serializable {
     public String toString(){
       return id + " " + username;
     }
+
+    // check if a user is logged in
+    public static boolean userIsLoggedIn(EntityManager em, String username){
+        ArrayList<String> onlineUsers = getOnlineUsers(em, username);
+        if(onlineUsers.contains(username))
+            return true;
+        return false;
+    }
+
+
+    // get a list of online users 
+    public static ArrayList<String> getOnlineUsers(EntityManager entityManager, String username){
+        //query select * users where user = user
+        ArrayList<String> onlineUsers = new ArrayList<String>();
+        String querySQL = "select u from User u";
+        User user = null;
+        try {
+            Query query = entityManager.createQuery(querySQL);
+            for (Object result : query.getResultList()) {
+                user = (User)result;           // cast the obj result from query to User obj
+                if(user.isLoggedIn())               // add online one user
+                    onlineUsers.add(user.getUsername());
+            }
+        } catch (NoResultException e){return null;}
+        return onlineUsers;
+    }
+
 }

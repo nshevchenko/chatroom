@@ -14,42 +14,45 @@ import javax.json.stream.JsonGenerator;
 import javax.json.JsonObject;
 import javax.json.JsonWriter;
 import javax.json.stream.JsonParsingException;
-import java.util.*;
-import javax.persistence.EntityManager;
-import java.io.IOException;
+
 import org.jboss.as.quickstarts.model.JSONParserKeyValue;
+import org.jboss.as.quickstarts.model.ChatMessage;
 import org.jboss.as.quickstarts.model.User;
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import javax.persistence.NoResultException;
+import java.util.*;
+
+import java.io.IOException;
 /**
- * Created by hs on 10/03/2016.
+ * Created by nik on 10/03/2016.
  */
 
 
 
-@WebServlet("/getOnlineUsers")
-public class GetOnlineUsersServletClient extends HttpServlet {
+@WebServlet("/postMessage")
+public class PostMessageServletClient extends HttpServlet {
 
     @Inject
     private EntityManager entityManager;
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         JSONParserKeyValue jsonParser = new JSONParserKeyValue(req);    // json parser
         String username = jsonParser.getValueByKey("username");         // get username as get paramater
+        String message = jsonParser.getValueByKey("message");
 
-        // get online users through sql query
-        ArrayList<String> onlineUsers = User.getOnlineUsers(entityManager, username);
-
+        if (User.userIsLoggedIn(entityManager, username)){
+            ChatMessage chatMsg = new ChatMessage(username, message);
+            // persist object message here
+        }
         // write response
         resp.setContentType("application/json");
         final JsonGenerator generator = Json.createGenerator(resp.getWriter());     // init json generator
 
         generator.writeStartObject();    // start obj
-        int count = 0;
-        for(String str : onlineUsers){
-            generator.write(count+"", str);     // loop through users
-            count++;    // id as key
-        }
+
         generator.writeEnd();
         generator.close();  // close
     }

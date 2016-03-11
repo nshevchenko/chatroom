@@ -24,6 +24,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import javax.persistence.NoResultException;
+import java.util.*;
+
+import java.io.IOException;
 
 /**
  * Definition of the chat Message entity
@@ -86,4 +92,18 @@ public class ChatMessage implements Serializable {
     public String toString(){
       return id + "." + username + ": "  + message;
     }
+
+    public static ArrayList<ChatMessage> getMessages(EntityManager entityManager, String username){
+        //query select * users where user = user
+        ArrayList<ChatMessage> chatMessages = new ArrayList<ChatMessage>();
+        String querySQL = "select top 10 msg from CHATMESSAGE msg";
+        ChatMessage msg = null;
+        try {
+            Query query = entityManager.createQuery(querySQL);
+            for (Object result : query.getResultList())
+                chatMessages.add((ChatMessage)result);  // cast the obj result from query to User obj
+        } catch (NoResultException e){return null;}
+        return chatMessages;
+    }
+
 }

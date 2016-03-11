@@ -43,7 +43,7 @@ public class GetMessageServletClient extends HttpServlet {
         String idLastSeenMessageStr = jsonParser.getValueByKey("idLastSeen");
         int idLastSeenMessage = Integer.parseInt(idLastSeenMessageStr);
         // get online users through sql query
-        ArrayList<ChatMessage> messages = getMessages(username);
+        ArrayList<ChatMessage> messages = ChatMessage.getMessages(entityManager, username);
 
         // write response
         resp.setContentType("application/json");
@@ -56,18 +56,5 @@ public class GetMessageServletClient extends HttpServlet {
         }
         generator.writeEnd();
         generator.close();  // close
-    }
-
-    private ArrayList<ChatMessage> getMessages(String username){
-        //query select * users where user = user
-        ArrayList<ChatMessage> chatMessages = new ArrayList<ChatMessage>();
-        String querySQL = "select top 10 msg from CHATMESSAGE msg";
-        ChatMessage msg = null;
-        try {
-            Query query = entityManager.createQuery(querySQL);
-            for (Object result : query.getResultList())
-                chatMessages.add((ChatMessage)result);  // cast the obj result from query to User obj
-        } catch (NoResultException e){return null;}
-        return chatMessages;
     }
 }
