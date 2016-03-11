@@ -103,8 +103,6 @@ public class JSONParserKeyValue{
         } catch (IOException e){
             System.out.println(e);
         }
-        String res = buffer.toString();
-        System.out.println("DASDASDASDASDAS *********************" + res);
         return buffer.toString();
     }
 }

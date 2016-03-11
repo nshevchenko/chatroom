@@ -57,7 +57,6 @@ public class ManagedBeanUserDao implements UserDao {
                 Query query = entityManager.createQuery(query_string);
                 query.setParameter("username", user.getUsername());
                 query.executeUpdate();
-                //entityManager.refresh(user);
             } finally {
                 utx.commit();
             }

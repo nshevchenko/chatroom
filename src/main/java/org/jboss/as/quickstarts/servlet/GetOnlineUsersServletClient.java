@@ -36,7 +36,8 @@ public class GetOnlineUsersServletClient extends HttpServlet {
 
         // get online users through sql query
         ArrayList<String> onlineUsers = User.getOnlineUsers(entityManager, username);
-
+        for(String asdf : onlineUsers)
+            System.out.println("username element : " + asdf);
         // write response
         resp.setContentType("application/json");
         final JsonGenerator generator = Json.createGenerator(resp.getWriter());     // init json generator
