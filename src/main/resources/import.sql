@@ -16,4 +16,5 @@
 --
 
 INSERT INTO USERS (id, username, password, loggedIn) VALUES (-1, 'admin', 'admin', 'TRUE');
-INSERT INTO USERS (id, username, password, loggedIn) VALUES (-2, 'nik', 'hi HENRIK', 'FALSE');
+INSERT INTO USERS (id, username, password, loggedIn) VALUES (-2, 'nik', 'asdf', 'FALSE');
+INSERT INTO USERS (id, username, password, loggedIn) VALUES (-3, 'henrik', 'hi HENRIK', 'FALSE');

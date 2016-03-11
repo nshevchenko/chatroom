@@ -66,14 +66,15 @@ public class JSONParserKeyValue{
                 switch (event) {
                 case KEY_NAME:
                     key = parser.getString();
-                    if(!keyValues.containsKey(key))
+                    if(!keyValues.containsKey(key)){
                         keyValues.put(key, null);
-                    // System.out.println(key);
+                    }
                     break;
                 case VALUE_STRING:
                     value = parser.getString();
-                    keyValues.put(key, value);
-                    // System.out.println(value);
+                    if(keyValues.get(key) == null && value != null){
+                        keyValues.put(key, value);
+                    }
                     break;
                 }
             }
@@ -82,21 +83,12 @@ public class JSONParserKeyValue{
         }
 
         Iterator it = keyValues.entrySet().iterator();
-        while (it.hasNext()) {
+        while (it.hasNext())
             Map.Entry pair = (Map.Entry)it.next();
-            System.out.println(pair.getKey() + " = " + pair.getValue());
-        }
     }
 
     public String getValueByKey(String key){
-        Iterator it = keyValues.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry)it.next();
-            if(key.equals(pair.getKey()))
-                return pair.getValue().toString();
-            it.remove(); // avoids a ConcurrentModificationException
-        }
-        return "";
+        return keyValues.get(key);
     }
 
     public String[] getKeys(){

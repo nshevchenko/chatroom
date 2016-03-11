@@ -74,9 +74,6 @@ public class AuthServletClient extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        // local var for
-        boolean successLogin = false;
-
         // Parse json request data
         // String data = getJsonDataFromRequest(req);
         JSONParserKeyValue jsonParser = new JSONParserKeyValue(req);
@@ -112,6 +109,7 @@ public class AuthServletClient extends HttpServlet {
             query.setParameter("username", username);
             user = (User) query.getSingleResult(); // retrieve user from result
         } catch (NoResultException e){
+            // System.out.println("NoResultException" + e);
             return false;
         }
         // check for login & set loggedin = true
