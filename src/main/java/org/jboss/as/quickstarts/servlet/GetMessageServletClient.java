@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
+import java.util.Enumeration;
 import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.stream.JsonGenerator;
@@ -15,6 +15,9 @@ import javax.json.JsonObject;
 import javax.json.JsonWriter;
 import javax.json.stream.JsonParsingException;
 import java.util.*;
+
+import java.io.StringReader;
+import java.io.BufferedReader;
 
 import java.io.IOException;
 import org.jboss.as.quickstarts.model.JSONParserKeyValue;
@@ -36,18 +39,37 @@ public class GetMessageServletClient extends HttpServlet {
     private EntityManager entityManager;
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
+        // JSONParserKeyValue jsonParser = new JSONParserKeyValue(req);
+
+        // StringBuilder sb = new StringBuilder();
+        // BufferedReader br = req.getReader();
+        // String str;
+        // while( (str = br.readLine()) != null ){
+        //     sb.append(str);
+        // }
+        // System.out.println("idLastSeenidLastSeenidLastSeenidLastSeenidLastSeen " + req.getParameter("idLastSeen"));
+
+        //
+        //  Enumeration<String> parameterNames = req.getParameterNames();
+        //  Systemz.out.println(parameterNames.toString());
+        //  while (parameterNames.hasMoreElements()) {
+        //     String paramName = parameterNames.nextElement();
+        //     System.out.println(" paramName " + paramName);
+        //     System.out.println(" paramName END" );
+        // }
         JSONParserKeyValue jsonParser = new JSONParserKeyValue(req);    // json parser
-        String username = jsonParser.getValueByKey("username");         // get username as get paramater
-        String idLastSeenMessageStr = jsonParser.getValueByKey("idLastSeen");
+        String idLastSeenMessageStr = jsonParser.getValueByKey("idLastSeen");         // get username as get paramater
+        // String idLastSeenMessageStr = "";
+        System.out.println("idLastSeenMessageStr  " + idLastSeenMessageStr);
         int idLastSeenMessage = -1;
-        if(idLastSeenMessageStr != null)
+        if(idLastSeenMessageStr != null && !idLastSeenMessageStr.equals(""))
             idLastSeenMessage = Integer.parseInt(idLastSeenMessageStr);
         else
             System.out.println("int idLastSeenMessage is NULL ");
         // get online users through sql query
-        ArrayList<ChatMessage> messages = ChatMessage.getMessages(entityManager, username);
+        ArrayList<ChatMessage> messages = ChatMessage.getMessages(entityManager, idLastSeenMessage);
 
         // write response
         resp.setContentType("application/json");

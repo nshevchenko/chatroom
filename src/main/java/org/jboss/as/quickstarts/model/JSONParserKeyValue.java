@@ -72,6 +72,7 @@ public class JSONParserKeyValue{
                     break;
                 case VALUE_STRING:
                     value = parser.getString();
+                    // System.out.println("value " + value);
                     if(keyValues.get(key) == null && value != null){
                         keyValues.put(key, value);
                     }
@@ -99,8 +100,11 @@ public class JSONParserKeyValue{
             while ((line = reader.readLine()) != null) {
                 buffer.append(line);
             }
-        } catch (IOException e){}
-        System.out.println(buffer.toString());
+        } catch (IOException e){
+            System.out.println(e);
+        }
+        String res = buffer.toString();
+        System.out.println("DASDASDASDASDAS *********************" + res);
         return buffer.toString();
     }
 }

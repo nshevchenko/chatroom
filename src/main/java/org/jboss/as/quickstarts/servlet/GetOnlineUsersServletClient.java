@@ -33,7 +33,6 @@ public class GetOnlineUsersServletClient extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
         JSONParserKeyValue jsonParser = new JSONParserKeyValue(req);    // json parser
         String username = jsonParser.getValueByKey("username");         // get username as get paramater
 
