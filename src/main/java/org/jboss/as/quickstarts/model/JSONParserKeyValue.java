@@ -100,6 +100,7 @@ public class JSONParserKeyValue{
                 buffer.append(line);
             }
         } catch (IOException e){}
+        System.out.println(buffer.toString());
         return buffer.toString();
     }
 }
