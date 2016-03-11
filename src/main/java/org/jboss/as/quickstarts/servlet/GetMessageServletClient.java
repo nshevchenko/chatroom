@@ -55,7 +55,7 @@ public class GetMessageServletClient extends HttpServlet {
         generator.writeStartObject();    // start obj
         int count = 0;
         for(ChatMessage msg : messages){
-            generator.write(msg.getId() + "", msg.getMessage());     // loop through users
+            generator.write(msg.getId() + "", msg.getUserName() + ":" + msg.getMessage());     // loop through users
         }
         generator.writeEnd();
         generator.close();  // close
