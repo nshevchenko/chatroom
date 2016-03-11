@@ -49,7 +49,7 @@ public class ManagedBeanUserDao implements UserDao {
         }
     }
 
-    public void updateUser(User user) {
+    public void loggedInTrue(User user) {
         try {
             try {
                 utx.begin();
@@ -70,4 +70,27 @@ public class ManagedBeanUserDao implements UserDao {
             throw new RuntimeException(e);
         }
     }
+
+    public void loggedInFalse(User user) {
+        try {
+            try {
+                utx.begin();
+                String query_string = "UPDATE User u SET loggedIn=false WHERE u.username = :username";
+                Query query = entityManager.createQuery(query_string);
+                query.setParameter("username", user.getUsername());
+                query.executeUpdate();
+                //entityManager.refresh(user);
+            } finally {
+                utx.commit();
+            }
+        } catch (Exception e) {
+            try {
+                utx.rollback();
+            } catch (SystemException se) {
+                throw new RuntimeException(se);
+            }
+            throw new RuntimeException(e);
+        }
+    }
+
 }
