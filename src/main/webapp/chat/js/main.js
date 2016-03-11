@@ -153,11 +153,6 @@ function cmdRegister(input) {
       var response = "/register "+input[1]+" &#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;";
       addToChat('',response,false);
       var post_register = postRegister(input[1], input[2]);
-      if(post_register) {
-          addToChat('','Registration successfull! Try to login :)',false);
-      } else {
-          addToChat('','Registration failed! Try another username.',false);
-      }
   } else {
     // if not show the help for /login
     input = '/help register';
@@ -168,11 +163,13 @@ function cmdRegister(input) {
 function postRegister(username, password) {
   $.post( "/wildfly-helloworld-mdb/register", JSON.stringify({ "username": username, "password": password }))
       .done(function( data ) {
-        console.log('Response from register post: ' + data);
-      });
+          if(data['SUCCESS'] == 'TRUE') {
+              addToChat('','Registration successfull! Try to login :)',false);
+          } else {
+              addToChat('','Registration failed! Try another username.',false);
+          }
 
-    // dev until parse response
-    return true;
+      });
 }
 
 /* Takes an author, string, and boolean for server-message and posts it to
@@ -289,7 +286,7 @@ function messageListener() {
 
     getOnlineUsers(username);
 
-    $.get( "/wildfly-helloworld-mdb/getMessages", JSON.stringify({"idLastSeen": id_last_seen.toString()}))
+    $.post( "/wildfly-helloworld-mdb/getMessages", JSON.stringify({"idLastSeen": id_last_seen.toString()}))
         .done(function( data ) {
             console.log('Response from getMessages get: ' + data);
             // TODO: Add each new message to the chat container
@@ -326,7 +323,7 @@ function getLastSeenId() {
 }
 
 function getOnlineUsers(username) {
-    $.get( "/wildfly-helloworld-mdb/getOnlineUsers", JSON.stringify({"username":username}))
+    $.post( "/wildfly-helloworld-mdb/getOnlineUsers", JSON.stringify({"username":username}))
         .done(function( data ) {
             for(var k in data) {
                 addToUsers(k, data[k]);
