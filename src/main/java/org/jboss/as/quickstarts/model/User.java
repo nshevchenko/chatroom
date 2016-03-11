@@ -178,9 +178,18 @@ public class User implements Serializable {
 
     // check if a user is logged in
     public static boolean userIsLoggedIn(EntityManager em, String username){
-        ArrayList<String> onlineUsers = getOnlineUsers(em, username);
-        if(onlineUsers.contains(username))
-            return true;
+        // ArrayList<String> onlineUsers = getOnlineUsers(em, username);
+        // if(onlineUsers.contains(username))
+        //     return true;
+        ArrayList<String> onlineUsers = new ArrayList<String>();
+        String querySQL = "select u from User u";
+        try {
+            Query query = em.createQuery(querySQL);
+            for (Object result : query.getResultList())
+                if(((User)result).getUsername().equals(username)){
+                    return true;
+                }
+        } catch (NoResultException e){return false;}
         return false;
     }
 
