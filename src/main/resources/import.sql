@@ -15,8 +15,8 @@
 -- limitations under the License.
 --
 
-INSERT INTO USERS (id, username, password, loggedIn) VALUES (-1, 'admin', 'admin', 'TRUE');
-INSERT INTO USERS (id, username, password, loggedIn) VALUES (-2, 'nik', 'asdf', 'FALSE');
+INSERT INTO USERS (id, username, password, loggedIn, privacy) VALUES (-1, 'admin', 'admin', 'TRUE', '0');
+INSERT INTO USERS (id, username, password, loggedIn, privacy) VALUES (-2, 'nik', 'asdf', 'FALSE', '0');
 
 INSERT INTO ChatMessages (id, username, message) VALUES (-1, 'henrik', 'hi HENRIK -1 ');
 INSERT INTO ChatMessages (id, username, message) VALUES (-2, 'nik', 'hi NIK -2 ');
