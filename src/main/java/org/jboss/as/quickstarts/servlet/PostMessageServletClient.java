@@ -17,6 +17,7 @@ import javax.json.stream.JsonParsingException;
 
 import org.jboss.as.quickstarts.model.JSONParserKeyValue;
 import org.jboss.as.quickstarts.model.ChatMessage;
+import org.jboss.as.quickstarts.model.ChatMsgDao;
 import org.jboss.as.quickstarts.model.User;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -34,6 +35,9 @@ import java.io.IOException;
 public class PostMessageServletClient extends HttpServlet {
 
     @Inject
+    private ChatMsgDao chatMsgDao;
+
+    @Inject
     private EntityManager entityManager;
 
     @Override
@@ -45,7 +49,9 @@ public class PostMessageServletClient extends HttpServlet {
 
         if (User.userIsLoggedIn(entityManager, username)){
             ChatMessage chatMsg = new ChatMessage(username, message);
-            entityManager.persist(chatMsg);
+            // entityManager.persist(chatMsg);
+            System.out.println("persisting");
+            chatMsgDao.createChatMessage(chatMsg);
             // persist object message here
         }
         // write response
@@ -53,7 +59,7 @@ public class PostMessageServletClient extends HttpServlet {
         final JsonGenerator generator = Json.createGenerator(resp.getWriter());     // init json generator
 
         generator.writeStartObject();    // start obj
-
+        generator.write("RESULT", "200");
         generator.writeEnd();
         generator.close();  // close
     }

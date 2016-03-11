@@ -151,4 +151,18 @@ public class User implements Serializable {
         return onlineUsers;
     }
 
+    // get user from query
+    public static User getUserFromQuery(EntityManager entityManager, String username) {
+        User user = null;
+        String querySQL = "select u from User u where u.username = :username";
+        try {
+            Query query = entityManager.createQuery(querySQL);
+            query.setParameter("username", username);
+            user = (User) query.getSingleResult(); // retrieve user from result
+        } catch (NoResultException e){
+            System.out.println("NoResultException" + e);
+            return null;
+        }
+        return user;
+    }
 }
