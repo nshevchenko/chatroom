@@ -30,8 +30,6 @@ import javax.persistence.NoResultException;
  * Created by nik on 10/03/2016.
  */
 
-
-
 @WebServlet("/getMessages")
 public class GetMessageServletClient extends HttpServlet {
 
@@ -41,24 +39,6 @@ public class GetMessageServletClient extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        // JSONParserKeyValue jsonParser = new JSONParserKeyValue(req);
-
-        // StringBuilder sb = new StringBuilder();
-        // BufferedReader br = req.getReader();
-        // String str;
-        // while( (str = br.readLine()) != null ){
-        //     sb.append(str);
-        // }
-        // System.out.println("idLastSeenidLastSeenidLastSeenidLastSeenidLastSeen " + req.getParameter("idLastSeen"));
-
-        //
-        //  Enumeration<String> parameterNames = req.getParameterNames();
-        //  Systemz.out.println(parameterNames.toString());
-        //  while (parameterNames.hasMoreElements()) {
-        //     String paramName = parameterNames.nextElement();
-        //     System.out.println(" paramName " + paramName);
-        //     System.out.println(" paramName END" );
-        // }
         JSONParserKeyValue jsonParser = new JSONParserKeyValue(req);    // json parser
         String idLastSeenMessageStr = jsonParser.getValueByKey("idLastSeen");         // get username as get paramater
         // String idLastSeenMessageStr = "";

@@ -103,7 +103,7 @@ public class ChatMessage implements Serializable {
         try {
             Query query = entityManager.createQuery(querySQL)
             .setParameter("idLastSeen", idLastSeen)
-            .setMaxResults(5);
+            .setMaxResults(50);
             for (Object result : query.getResultList())
                 chatMessages.add((ChatMessage)result);  // cast the obj result from query to User obj
         } catch (NoResultException e){return null;}
