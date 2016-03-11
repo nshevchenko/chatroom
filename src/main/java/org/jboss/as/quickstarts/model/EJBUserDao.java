@@ -34,7 +34,11 @@ public class EJBUserDao implements UserDao {
         entityManager.persist(user);
     }
 
-    public void updateUser(User user) {
+    public void loggedInFalse(User user) {
+        entityManager.refresh(user);
+    }
+
+    public void loggedInTrue(User user) {
         entityManager.refresh(user);
     }
 
