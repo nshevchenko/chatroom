@@ -23,8 +23,6 @@ import org.jboss.as.quickstarts.model.User;
  * Created by hs on 10/03/2016.
  */
 
-
-
 @WebServlet("/getOnlineUsers")
 public class GetOnlineUsersServletClient extends HttpServlet {
 

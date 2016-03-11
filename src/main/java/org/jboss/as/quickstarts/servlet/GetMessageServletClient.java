@@ -30,8 +30,6 @@ import javax.persistence.NoResultException;
  * Created by nik on 10/03/2016.
  */
 
-
-
 @WebServlet("/getMessages")
 public class GetMessageServletClient extends HttpServlet {
 
