@@ -204,6 +204,9 @@ function postGetFriends() {
     $.post( "/wildfly-helloworld-mdb/getFriends", JSON.stringify({ "username": username }))
         .done(function( data ) {
             if(data['SUCCESS'] == 'TRUE') {
+
+                var response = "Here is a list of your friends! :)<br/>" + data['friends'];
+
                 addToChat('','Here is a list of your friends! :)',false);
             } else {
                 addToChat('','Could not find your friends! Try again.',false);
