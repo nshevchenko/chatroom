@@ -1,27 +1,29 @@
-helloworld-mdb: Helloworld Using an MDB (Message-Driven Bean)
+chatroom RMI
 ============================================================
-Author: Serge Pagop, Andy Taylor, Jeff Mesnil  
-Level: Intermediate  
-Technologies: JMS, EJB, MDB  
-Summary: The `helloworld-mdb` quickstart uses *JMS* and *EJB Message-Driven Bean* (MDB) to create and deploy JMS topic and queue resources in WildFly.  
+Author: Mykola Shevchenko, Henrik Skogmo
+Technologies: JMS, EJB, MDB, JSON, JPA  
+Summary: The `chatroom` webapp uses *JMS* and *EJB Message-Driven Bean* (MDB) to create and deploy a fully functional chat.  
 Target Product: WildFly  
-Source: <https://github.com/wildfly/quickstart/>  
+Source: <https://github.com/nshevchenko/chatroom>  
 
 What is it?
 -----------
 
-The `helloworld-mdb` quickstart demonstrates the use of *JMS* and *EJB Message-Driven Bean* in Red Hat JBoss Enterprise Application Platform.
+The `chatroom` projects demonstrates the usage of EJB with implementation of multiple endpoints and a front-end in Java.
 
-This project creates two JMS resources:
-
-* A queue named `HELLOWORLDMDBQueue` bound in JNDI as `java:/queue/HELLOWORLDMDBQueue`
-* A topic named `HELLOWORLDMDBTopic` bound in JNDI as `java:/topic/HELLOWORLDMDBTopic`
-
+This project creates the following endpoints resources:
+ - login
+ - register
+ - logout
+ - getFriends
+ - addFriend
+ - removeFriend
+ - privacy ( everyone | friends | noone)
 
 System requirements
 -------------------
 
-The application this project produces is designed to be run on Red Hat JBoss Enterprise Application Platform 7 or later. 
+The application this project produces is designed to be run on Red Hat JBoss Enterprise Application Platform 7 or later.
 
 All you need to build this project is Java 8.0 (Java SDK 1.8) or later and Maven 3.1.1 or later. See [Configure Maven for WildFly 10](https://github.com/jboss-developer/jboss-developer-shared-resources/blob/master/guides/CONFIGURE_MAVEN_JBOSS_EAP7.md#configure-maven-to-build-and-deploy-the-quickstarts) to make sure you are configured correctly for testing the quickstarts.
 
@@ -51,63 +53,19 @@ Build and Deploy the Quickstart
 
         mvn clean install wildfly:deploy
 
-4. This will deploy `target/wildfly-helloworld-mdb.war` to the running instance of the server. Look at the WildFly console or Server log and you should see log messages corresponding to the deployment of the message-driven beans and the JMS destinations:
-
-        ...
-        INFO  [org.wildfly.extension.messaging-activemq] (MSC service thread 1-4) WFLYMSGAMQ0002: Bound messaging object to jndi name java:/queue/HELLOWORLDMDBQueue
-        INFO  [org.wildfly.extension.messaging-activemq] (MSC service thread 1-2) WFLYMSGAMQ0002: Bound messaging object to jndi name java:/topic/HELLOWORLDMDBTopic
-        ....
-        INFO  [org.apache.activemq.artemis.core.server] (ServerService Thread Pool -- 67) AMQ221003: trying to deploy queue jms.queue.HelloWorldMDBQueue
-        ...
-        INFO  [org.apache.activemq.artemis.core.server] (ServerService Thread Pool -- 12) AMQ221003: trying to deploy queue jms.topic.HelloWorldMDBTopic
-        INFO  [org.jboss.as.ejb3] (MSC service thread 1-7) WFLYEJB0042: Started message driven bean 'HelloWorldQueueMDB' with 'activemq-ra.rar' resource adapter
-        INFO  [org.jboss.as.ejb3] (MSC service thread 1-6) WFLYEJB0042: Started message driven bean 'HelloWorldQTopicMDB' with 'activemq-ra.rar' resource adapter
-        
-
-Access the application 
+Access the application
 ---------------------
 
-The application will be running at the following URL: <http://localhost:8080/wildfly-helloworld-mdb/> and will send some messages to the queue.
+The application will be running at the following URL: <http://localhost:8080/wildfly-helloworld-mdb/chat//> and will send some messages to the queue.
 
 To send messages to the topic, use the following URL: <http://localhost:8080/wildfly-helloworld-mdb/HelloWorldMDBServletClient?topic>
-
-Investigate the Server Console Output
--------------------------
-
-Look at the WildFly console or Server log and you should see log messages like the following:
-
-    INFO  [class org.jboss.as.quickstarts.mdb.HelloWorldQueueMDB] (Thread-9 (ActiveMQ-client-global-threads-1189700957)) Received Message from queue: This is message 5
-    INFO  [class org.jboss.as.quickstarts.mdb.HelloWorldQueueMDB] (Thread-6 (ActiveMQ-client-global-threads-1189700957)) Received Message from queue: This is message 1
-    INFO  [class org.jboss.as.quickstarts.mdb.HelloWorldQueueMDB] (Thread-7 (ActiveMQ-client-global-threads-1189700957)) Received Message from queue: This is message 4
-    INFO  [class org.jboss.as.quickstarts.mdb.HelloWorldQueueMDB] (Thread-5 (ActiveMQ-client-global-threads-1189700957)) Received Message from queue: This is message 2
-    INFO  [class org.jboss.as.quickstarts.mdb.HelloWorldQueueMDB] (Thread-4 (ActiveMQ-client-global-threads-1189700957)) Received Message from queue: This is message 3
-
-
-Undeploy the Archive
---------------------
-
-1. Make sure you have started the WildFly server as described above.
-2. Open a command prompt and navigate to the root directory of this quickstart.
-3. When you are finished testing, type this command to undeploy the archive:
-
-        mvn wildfly:undeploy
-
-
-Run the Quickstart in Red Hat JBoss Developer Studio or Eclipse
--------------------------------------
-You can also start the server and deploy the quickstarts or run the Arquillian tests from Eclipse using JBoss tools. For general information about how to import a quickstart, add a WildFly server, and build and deploy a quickstart, see [Use JBoss Developer Studio or Eclipse to Run the Quickstarts](https://github.com/jboss-developer/jboss-developer-shared-resources/blob/master/guides/USE_JBDS.md#use-jboss-developer-studio-or-eclipse-to-run-the-quickstarts) 
-
-_NOTE:_ Within JBoss Developer Studio, be sure to define a server runtime environment that uses the `standalone-full.xml` configuration file.
 
 
 Debug the Application
 ------------------------------------
 
-If you want to debug the source code of any library in the project, run the following command to pull the source into your local repository. The IDE should then detect it.
-
-    mvn dependency:sources
-   
+Use the chat with multiple tabs to register new user and send messages.
+Play around with the privacy settings and add users as friends.
 
 
 <!-- Build and Deploy the Quickstart to OpenShift - Coming soon! -->
-
