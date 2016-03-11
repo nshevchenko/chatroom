@@ -289,14 +289,14 @@ function messageListener() {
 
     getOnlineUsers(username);
 
-    $.get( "/wildfly-helloworld-mdb/getMessages", JSON.stringify({"username":username, "idLastSeen": id_last_seen.toString()}))
+    $.get( "/wildfly-helloworld-mdb/getMessages", JSON.stringify({"idLastSeen": id_last_seen.toString()}))
         .done(function( data ) {
             console.log('Response from getMessages get: ' + data);
             // TODO: Add each new message to the chat container
             for(var k in data) {
                 addToChat('foo', data[k], k);
             }
-        });
+        }, "json");
 }
 
 function ceaseChat() {
@@ -331,7 +331,7 @@ function getOnlineUsers(username) {
             for(var k in data) {
                 addToUsers(k, data[k]);
             }
-        });
+        }, "json");
 }
 
 function cmdPrivacy(input) {
