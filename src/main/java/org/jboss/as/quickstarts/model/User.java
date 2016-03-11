@@ -198,9 +198,12 @@ public class User implements Serializable {
                 if(friend.isLoggedIn() && friend.getPrivacy() == 0)      // add online one user
                     onlineUsers.add(friend.getUsername());
 
-                if( friend.getPrivacy() == 1 &&
-                    friend.getFriendsStr().indexOf(username) >= 0)
-                    onlineUsers.add(friend.getUsername());
+                if( friend.getPrivacy() == 1) {
+                    if(friend.getFriendsStr() != null){
+                        if(friend.getFriendsStr().indexOf(username) >= 0)
+                            onlineUsers.add(friend.getUsername());
+                    }
+                }
             }
         } catch (NoResultException e){return null;}
         return onlineUsers;
