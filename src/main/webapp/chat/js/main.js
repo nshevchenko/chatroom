@@ -292,9 +292,10 @@ function messageListener() {
     $.get( "/wildfly-helloworld-mdb/getMessages", JSON.stringify({"username":username, "idLastSeen": id_last_seen}))
         .done(function( data ) {
             console.log('Response from getMessages get: ' + data);
-
             // TODO: Add each new message to the chat container
-
+            for(var k in data) {
+                addToChat('foo', data[k], k);
+            }
         });
 }
 
