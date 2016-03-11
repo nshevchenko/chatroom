@@ -136,7 +136,7 @@ function cmdLogout(input) {
 }
 
 function postLogout(username) {
-    $.post( "/wildfly-helloworld-mdb/auth?logout", JSON.stringify({"username": username}))
+    $.post( "/wildfly-helloworld-mdb/logout", JSON.stringify({"username": username}))
         .done(function( data ) {
             console.log('Response from auth logout post: ' + data);
         });

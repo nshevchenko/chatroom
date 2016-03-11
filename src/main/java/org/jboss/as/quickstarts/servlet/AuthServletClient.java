@@ -76,7 +76,7 @@ public class AuthServletClient extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    
+
         // Parse json request data
         // String data = getJsonDataFromRequest(req);
         JSONParserKeyValue jsonParser = new JSONParserKeyValue(req);
