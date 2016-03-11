@@ -41,7 +41,11 @@ public class GetMessageServletClient extends HttpServlet {
         JSONParserKeyValue jsonParser = new JSONParserKeyValue(req);    // json parser
         String username = jsonParser.getValueByKey("username");         // get username as get paramater
         String idLastSeenMessageStr = jsonParser.getValueByKey("idLastSeen");
-        int idLastSeenMessage = Integer.parseInt(idLastSeenMessageStr);
+        int idLastSeenMessage = -1;
+        if(idLastSeenMessageStr != null)
+            idLastSeenMessage = Integer.parseInt(idLastSeenMessageStr);
+        else
+            System.out.println("int idLastSeenMessage is NULL ");
         // get online users through sql query
         ArrayList<ChatMessage> messages = ChatMessage.getMessages(entityManager, username);
 

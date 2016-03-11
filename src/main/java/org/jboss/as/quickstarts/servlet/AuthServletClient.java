@@ -108,13 +108,15 @@ public class AuthServletClient extends HttpServlet {
             Query query = entityManager.createQuery(querySQL);
             query.setParameter("username", username);
             user = (User) query.getSingleResult(); // retrieve user from result
+
         } catch (NoResultException e){
-            // System.out.println("NoResultException" + e);
+            //System.out.println("NoResultException" + e);
             return false;
         }
         // check for login & set loggedin = true
         if(user.getPassword().equals(password)){
             user.setLoggedIn(true);
+            //entityManager.persist(user);
             return true;
         }
         // otherwise return false

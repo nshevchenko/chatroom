@@ -40,7 +40,7 @@ import java.io.IOException;
  */
 
 @Entity
-@Table(name="CHATMESSAGE")
+@Table(name="CHATMESSAGES")
 public class ChatMessage implements Serializable {
 
     @Id
@@ -92,14 +92,16 @@ public class ChatMessage implements Serializable {
     public String toString(){
       return id + "." + username + ": "  + message;
     }
-
+    
     public static ArrayList<ChatMessage> getMessages(EntityManager entityManager, String username){
         //query select * users where user = user
         ArrayList<ChatMessage> chatMessages = new ArrayList<ChatMessage>();
-        String querySQL = "select top 10 msg from CHATMESSAGE msg";
+        String querySQL = "SELECT m FROM ChatMessage m ORDER BY m.id desc"; //
+
         ChatMessage msg = null;
         try {
             Query query = entityManager.createQuery(querySQL);
+            query.setMaxResults(5);
             for (Object result : query.getResultList())
                 chatMessages.add((ChatMessage)result);  // cast the obj result from query to User obj
         } catch (NoResultException e){return null;}

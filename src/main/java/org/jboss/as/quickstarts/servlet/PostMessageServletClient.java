@@ -45,6 +45,7 @@ public class PostMessageServletClient extends HttpServlet {
 
         if (User.userIsLoggedIn(entityManager, username)){
             ChatMessage chatMsg = new ChatMessage(username, message);
+            entityManager.persist(chatMsg);
             // persist object message here
         }
         // write response
