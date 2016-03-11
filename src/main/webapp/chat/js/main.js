@@ -127,18 +127,17 @@ function cmdLogout(input) {
     var response = "/logout";
     addToChat('',response,false);
     var post_logout = postLogout(username);
-    if(post_logout) {
-        addToChat('','Logout successfull',false);
-        ceaseChat();
-    } else {
-        addToChat('','Logout failed, try again',false);
-    }
 }
 
 function postLogout(username) {
     $.post( "/wildfly-helloworld-mdb/logout", JSON.stringify({"username": username}))
         .done(function( data ) {
-            console.log('Response from auth logout post: ' + data);
+            if(data['SUCCESS'] == 'TRUE') {
+                addToChat('','Logout successfull',false);
+                ceaseChat(username);
+            } else {
+                addToChat('','Logout failed, try again',false);
+            }
         });
 
     // dev only until response is parsed
