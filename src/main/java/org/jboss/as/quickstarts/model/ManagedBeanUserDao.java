@@ -53,8 +53,11 @@ public class ManagedBeanUserDao implements UserDao {
         try {
             try {
                 utx.begin();
-                user.setLoggedIn(true);
-                //entityManager.persist(user);
+                String query_string = "UPDATE User u SET loggedIn=true WHERE u.username = :username";
+                Query query = entityManager.createQuery(query_string);
+                query.setParameter("username", user.getUsername());
+                query.executeUpdate();
+                //entityManager.refresh(user);
             } finally {
                 utx.commit();
             }

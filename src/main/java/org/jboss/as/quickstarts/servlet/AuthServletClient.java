@@ -119,9 +119,9 @@ public class AuthServletClient extends HttpServlet {
         }
         // check for login & set loggedin = true
         if(user.getPassword().equals(password)){
-            //user.setLoggedIn(true);
-            userDao.updateUser(user);
 
+            user.setLoggedIn(true);
+            userDao.updateUser(user);
             return true;
         }
         // otherwise return false
