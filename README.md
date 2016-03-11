@@ -15,7 +15,9 @@ What is it?
 The `chatroom` projects demonstrates the usage of EJB with implementation of multiple endpoints and a front-end in Java.
 
 
-    ![alt tag](/chatExample.png)
+<p align="center">
+  <img src="/chatExample.png" width="550"/>
+</p>
 
 
 This project creates the following endpoints resources:
