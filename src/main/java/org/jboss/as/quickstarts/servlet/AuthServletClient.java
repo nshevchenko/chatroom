@@ -83,23 +83,24 @@ public class AuthServletClient extends HttpServlet {
         String username = jsonParser.getValueByKey("username");
         String password = jsonParser.getValueByKey("password");
         // write response
-
+        resp.setContentType("application/json");
+        JsonWriter jsonWriter = Json.createWriter(resp.getWriter());
+        JsonObject model = null;
         if(auth(username, password)){
-            resp.setContentType("application/json");
-            try {
-                JsonWriter jsonWriter = Json.createWriter(resp.getWriter());
-                JsonObject model = Json.createObjectBuilder()
-                    .add("SUCCESS", "TRUE")
-                    .add("username", username)
-                    .add("password", password)
-                    .build();
-                jsonWriter.writeObject(model);
-                jsonWriter.close();
-                System.out.println(model.toString());
-            } catch(JsonParsingException e){
-
-            }
+            model = Json.createObjectBuilder()
+                .add("SUCCESS", "TRUE")
+                .add("username", username)
+                .add("password", password)
+                .build();
+        } else {
+            model = Json.createObjectBuilder()
+                .add("SUCCESS", "FALSE")
+                .add("username", username)
+                .add("password", password)
+                .build();
         }
+        jsonWriter.writeObject(model);
+        jsonWriter.close();
     }
 
     private boolean auth(String username, String password){
