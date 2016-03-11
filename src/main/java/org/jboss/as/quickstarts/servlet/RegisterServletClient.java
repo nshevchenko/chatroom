@@ -76,7 +76,7 @@ public class RegisterServletClient extends HttpServlet {
             user = new User();
             user.setUseranme(username);
             user.setPassword(password);
-            user.setLoggedIn(false);
+            user.setLoggedIn(true);
             userDao.createUser(user);
 
             return true;

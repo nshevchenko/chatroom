@@ -53,14 +53,19 @@ public class ManagedBeanUserDao implements UserDao {
         try {
             try {
                 utx.begin();
+                System.out.println("updating isLoggedIn?? = " +user.isLoggedIn());
                 user.setLoggedIn(true);
+                System.out.println("updating isLoggedIn?? = " +user.isLoggedIn());
                 //entityManager.persist(user);
             } finally {
                 utx.commit();
+                entityManager.flush();
+                System.out.println("commiting isLoggedIn?? = "+ user.isLoggedIn());
             }
         } catch (Exception e) {
             try {
                 utx.rollback();
+                System.out.println("ROLLLBAAACK");
             } catch (SystemException se) {
                 throw new RuntimeException(se);
             }

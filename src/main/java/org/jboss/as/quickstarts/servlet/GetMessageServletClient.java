@@ -40,15 +40,12 @@ public class GetMessageServletClient extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         JSONParserKeyValue jsonParser = new JSONParserKeyValue(req);    // json parser
-        String idLastSeenMessageStr = jsonParser.getValueByKey("idLastSeen");         // get username as get paramater
-        // String idLastSeenMessageStr = "";
-        System.out.println("idLastSeenMessageStr  " + idLastSeenMessageStr);
-        int idLastSeenMessage = -1;
+        String idLastSeenMessageStr = jsonParser.getValueByKey("idLastSeen");// get id last seen msg as get paramater
+        int idLastSeenMessage = -1; // init last seen int with -1
         if(idLastSeenMessageStr != null && !idLastSeenMessageStr.equals(""))
             idLastSeenMessage = Integer.parseInt(idLastSeenMessageStr);
-        else
-            System.out.println("int idLastSeenMessage is NULL ");
-        // get online users through sql query
+
+        // get messages through sql query
         ArrayList<ChatMessage> messages = ChatMessage.getMessages(entityManager, idLastSeenMessage);
 
         // write response

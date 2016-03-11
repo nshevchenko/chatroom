@@ -96,9 +96,8 @@ public class ChatMessage implements Serializable {
     public static ArrayList<ChatMessage> getMessages(EntityManager entityManager, int idLastSeen){
         //query select * users where user = user
         ArrayList<ChatMessage> chatMessages = new ArrayList<ChatMessage>();
-        System.out.println("trying with idLastSeen " + idLastSeen);
         String querySQL = "select m from ChatMessage m where m.id > :idLastSeen"; //ORDER BY m.id desc
-
+        
         ChatMessage msg = null;
         try {
             Query query = entityManager.createQuery(querySQL)
