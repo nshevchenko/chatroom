@@ -27,11 +27,18 @@ public class HomeServletClient extends HttpServlet {
             HttpSession sess = req.getSession();
             boolean loggedIn = (boolean) sess.getAttribute("loggedIn");
 
+
+
+
+
+            // out.write("<p>Sending messages to <em>" + user.getPassword() + "</em></p>");
+
+
             if(loggedIn) {
                 out.write("<h1>Fi-fah-foo!</h1>");
                 out.write("<h2>/home:</h2>");
                 out.write("<p>Welcome home! Only logged in users can see this ;)</p>");
-                out.write("<p>insert super secret codes here</p>");
+                // out.write("<p>Total users loggedin : " + users.size() + " </p>");
             }
 
         } catch(NullPointerException e) {

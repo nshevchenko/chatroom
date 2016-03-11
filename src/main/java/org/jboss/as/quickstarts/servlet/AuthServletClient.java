@@ -8,17 +8,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import java.io.IOException;
+import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonWriter;
-import javax.json.stream.JsonGenerator;
-import javax.json.stream.JsonParser;
-import javax.json.stream.JsonParser.Event;
+import javax.json.stream.JsonParsingException;
 
-import java.io.StringReader;
-import java.io.BufferedReader;
-
+import java.io.IOException;
+import org.jboss.as.quickstarts.model.JSONParserKeyValue;
+import org.jboss.as.quickstarts.model.User;
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import javax.persistence.NoResultException;
 /**
  * Created by hs on 10/03/2016.
  */
@@ -27,6 +28,9 @@ import java.io.BufferedReader;
 
 @WebServlet("/auth")
 public class AuthServletClient extends HttpServlet {
+
+    @Inject
+    private EntityManager entityManager;
 
     // @Override
     // protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -65,49 +69,56 @@ public class AuthServletClient extends HttpServlet {
     // }
 
 
+
+    // private void login()
+
+    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        // local var for
+        boolean successLogin = false;
 
         // Parse json request data
-        StringBuilder buffer = new StringBuilder();
-        BufferedReader reader = (BufferedReader)req.getReader();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            buffer.append(line);
+        // String data = getJsonDataFromRequest(req);
+        JSONParserKeyValue jsonParser = new JSONParserKeyValue(req);
+        String username = jsonParser.getValueByKey("username");
+        String password = jsonParser.getValueByKey("password");
+        // write response
+
+        if(auth(username, password)){
+            resp.setContentType("application/json");
+            try {
+                JsonWriter jsonWriter = Json.createWriter(resp.getWriter());
+                JsonObject model = Json.createObjectBuilder()
+                    .add("SUCCESS", "TRUE")
+                    .add("username", username)
+                    .add("password", password)
+                    .build();
+                jsonWriter.writeObject(model);
+                jsonWriter.close();
+                System.out.println(model.toString());
+            } catch(JsonParsingException e){
+
+            }
         }
-        String data = buffer.toString();
-        final JsonParser parser = Json.createParser(new StringReader(data));
-        while (parser.hasNext()) {
-            final Event event = parser.next();
-            String key = parser.getString();
-            System.out.println("key " + key);
+    }
+
+    private boolean auth(String username, String password){
+        //query select * users where user = user
+        String querySQL = "select u from User u where u.username = :username";
+        User user = null;
+        try {
+            Query query = entityManager.createQuery(querySQL);
+            query.setParameter("username", username);
+            user = (User) query.getSingleResult(); // retrieve user from result
+        } catch (NoResultException e){
+            return false;
         }
-
-
-
-        // String key = null;
-        // String value = null;
-        // while (parser.hasNext()) {
-        //     final Event event = parser.next();
-        //     switch (event) {
-        //         case KEY_NAME:
-        //             key = parser.getString();
-        //             System.out.println(key);
-        //             System.out.println(username +"\n\n");
-        //             break;
-        //         case VALUE_STRING:
-        //             value = parser.getString();
-        //             System.out.println(value);
-        //             break;
-        //     }
-        // }
-        parser.close();
-
-        // Find
-
-
-
-
-
-
+        // check for login & set loggedin = true
+        if(user.getPassword().equals(password)){
+            user.setLoggedIn(true);
+            return true;
+        }
+        // otherwise return false
+        return false;
     }
 }

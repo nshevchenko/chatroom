@@ -45,6 +45,7 @@ public class HelloWorldQueueMDB implements MessageListener {
      */
     public void onMessage(Message rcvMessage) {
         TextMessage msg = null;
+        
         try {
             if (rcvMessage instanceof TextMessage) {
                 msg = (TextMessage) rcvMessage;

@@ -101,14 +101,11 @@ public class HelloWorldMDBServletClient extends HttpServlet {
 
 
         try {
+
+
+
             boolean useTopic = req.getParameterMap().keySet().contains("topic");
             final Destination destination = useTopic ? topic : queue;
-
-            Query query = entityManager.createQuery("select u from User u where u.username = :username");
-            query.setParameter("username", "nik");
-            User user = (User) query.getSingleResult();
-            out.write("<p>Sending messages to <em>" + user.getPassword() + "</em></p>");
-            
             out.write("<p>Sending messages to <em>" + destination + "</em></p>");
             out.write("<h2>Following messages will be send to the destination:</h2>");
             for (int i = 0; i < MSG_COUNT; i++) {
