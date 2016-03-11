@@ -123,10 +123,10 @@ function postLogin(username, password) {
 
 function cmdLogout(input) {
     input = input.substring(1).split(' ');
-    // Check that username and password was supplied
+    // Check that username was supplied
     var response = "/logout";
     addToChat('',response,false);
-    var post_logout = postLogout();
+    var post_logout = postLogout(username);
     if(post_logout) {
         addToChat('','Logout successfull',false);
         ceaseChat();
@@ -135,8 +135,8 @@ function cmdLogout(input) {
     }
 }
 
-function postLogout() {
-    $.post( "/wildfly-helloworld-mdb/auth?logout")
+function postLogout(username) {
+    $.post( "/wildfly-helloworld-mdb/auth?logout", JSON.stringify({"username": username}))
         .done(function( data ) {
             console.log('Response from auth logout post: ' + data);
         });
@@ -193,11 +193,12 @@ function addToChat(author, message, id) {
 }
 
 function postMessage(message) {
-  $.post( "/wildfly-helloworld-mdb/postMessage", { "username": username, "message": message })
+  $.post( "/wildfly-helloworld-mdb/postMessage", JSON.stringify({ "username": username, "message": message }))
       .done(function( data ) {
         console.log('Response from message post: ' + data);
 
           // TODO: Add the message to chat container
+
       }, "json");
 }
 
