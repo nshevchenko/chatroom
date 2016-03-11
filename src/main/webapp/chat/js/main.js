@@ -392,6 +392,14 @@ function getLastSeenId() {
 function getOnlineUsers(username) {
     $.post( "/wildfly-helloworld-mdb/getOnlineUsers", JSON.stringify({"username":username}))
         .done(function( data ) {
+
+            // Remove all online users
+            $('.users-container ul li').each(function(index) {
+               $(this).remove();
+            });
+
+            $('.users-online').text('0');
+
             for(var k in data) {
                 addToUsers(k, data[k]);
             }
