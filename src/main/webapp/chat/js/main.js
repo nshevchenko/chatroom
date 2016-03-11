@@ -56,10 +56,11 @@ function cmdHelp(input) {
     var login    = "- /login [username] [password] - to login to the chat<br/>";
     var logout   = "- /logout - to disconnect from the chat<br/>";
     var register = "- /register [username] [password] - to register<br/>";
-    var privacy  = "- /privacy {selective,everyone,noone} - choose who can see that you're online<br/>"
-                 + "&nbsp;&nbsp;/privacy selective elliot darlene - will make you only visible for the users elliot and darlene<br/>"
+    var privacy  = "- /privacy {friends,everyone,noone} - choose who can see that you're online<br/>"
+                 + "&nbsp;&nbsp;/privacy friends - will make you only visible for friends<br/>"
                  + "&nbsp;&nbsp;/privacy everyone - will make you visible for everyone<br/>"
                  + "&nbsp;&nbsp;/privacy noone - will make you invisible for everyone<br/>";
+    var friends  = "- /friends {add,remove} elliot - will add/remove elliot<br/>";
 
   var response = "";
 
@@ -69,7 +70,8 @@ function cmdHelp(input) {
       + login
       + logout
       + register
-      + privacy;
+      + privacy
+      + friends;
   } else {
     switch(input[1]) {
         case 'login':
@@ -83,6 +85,9 @@ function cmdHelp(input) {
             break;
         case 'privacy':
             response = privacy;
+            break;
+        case 'friends':
+            response = friends;
             break;
     }
   }
@@ -249,7 +254,13 @@ function removeUser(user) {
 * The user doesn't have to be logged in to view this.
 * */
 function showWelcome() {
-  addToChat('','Welcome to the chat!');
+    var welcome = " __      __       .__                               \n"
+                + "/  \    /  \ ____ |  |   ____  ____   _____   ____  \n"
+                + "\   \/\/   // __ \|  | _/ ___\/  _ \ /     \_/ __ \ \n"
+                + " \        /\  ___/|  |_\  \__(  <_> )  Y Y  \  ___/ "
+                + "  \__/\  /  \___  >____/\___  >____/|__|_|  /\___  >"
+                + "       \/       \/          \/            \/     \/ ";
+    addToChat('',welcome);
   cmdHelp('/help');
 }
 
@@ -291,7 +302,7 @@ function messageListener() {
             console.log('Response from getMessages get: ' + data);
             // TODO: Add each new message to the chat container
             for(var k in data) {
-                addToChat('foo', data[k], k);
+                addToChat(data[k].split(':')[0], data[k].split(':')[1], k);
             }
         }, "json");
 }
