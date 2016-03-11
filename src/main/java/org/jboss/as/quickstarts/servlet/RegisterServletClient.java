@@ -1,6 +1,7 @@
 package org.jboss.as.quickstarts.servlet;
 
 import org.jboss.as.quickstarts.model.JSONParserKeyValue;
+import org.jboss.as.quickstarts.model.User;
 
 import javax.inject.Inject;
 import javax.json.Json;
@@ -17,7 +18,7 @@ import java.io.IOException;
 /**
  * Created by hs on 11/03/2016.
  */
-@WebServlet("/auth")
+@WebServlet("/register")
 public class RegisterServletClient extends HttpServlet {
     @Inject
     private EntityManager entityManager;
@@ -35,16 +36,26 @@ public class RegisterServletClient extends HttpServlet {
         JsonWriter jsonWriter = Json.createWriter(resp.getWriter());
         JsonObject model = null;
 
-        if(unique(username)) {
-            boolean register = register(username,password);
+        if(register(username,password)) {
+            model = Json.createObjectBuilder()
+                    .add("SUCCESS", "TRUE")
+                    .add("username", username)
+                    .add("password", password)
+                    .build();
+        } else {
+            model = Json.createObjectBuilder()
+                    .add("SUCCESS", "FALSE")
+                    .add("username", username)
+                    .add("password", password)
+                    .build();
         }
-    }
-
-    private boolean unique(String username) {
-        return true;
+        jsonWriter.writeObject(model);
+        jsonWriter.close();
     }
 
     private boolean register(String username, String password) {
+        String querySQL = "select u from User u where u.username = :username";
+        User user = null;
         return true;
     }
 
