@@ -21,18 +21,21 @@ $('.input-form').submit(function(e) {
 
     // Srip the '/' and run through the different available commands
     switch(input.substring(1).split(' ')[0]) {
-      case 'help':
-          cmdHelp(input);
-          break;
-      case 'login':
-          cmdLogin(input);
-          break;
-      case 'logout':
-          cmdLogout(input);
-          break;
-      case 'register':
-          cmdRegister(input);
-          break;
+        case 'help':
+            cmdHelp(input);
+            break;
+        case 'login':
+            cmdLogin(input);
+            break;
+        case 'logout':
+            cmdLogout(input);
+            break;
+        case 'register':
+            cmdRegister(input);
+            break;
+        case 'privacy':
+            cmdPrivacy(input);
+            break;
 
     }
   // If it doesn't start with a '/', than it's a chat message
@@ -54,7 +57,9 @@ function cmdHelp(input) {
     var logout   = "- /logout - to disconnect from the chat<br/>";
     var register = "- /register [username] [password] - to register<br/>";
     var privacy  = "- /privacy {selective,everyone,noone} - choose who can see that you're online<br/>"
-                 + "  /private selective";
+                 + "&nbsp;&nbsp;/privacy selective elliot darlene - will make you only visible for the users elliot and darlene<br/>"
+                 + "&nbsp;&nbsp;/privacy everyone - will make you visible for everyone<br/>"
+                 + "&nbsp;&nbsp;/privacy noone - will make you invisible for everyone<br/>";
 
   var response = "";
 
@@ -92,12 +97,6 @@ function cmdLogin(input) {
     var response = "/login "+input[1]+" &#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;";
     addToChat('',response,false);
     var post_login = postLogin(input[1], input[2]);
-    if(post_login) {
-      addToChat('','Login successfull',false);
-      initiateChat(input[1]);
-    } else {
-      addToChat('','Login failed, try again',false);
-    }
   } else {
     // if not show the help for /login
     input = '/help login';
@@ -109,10 +108,17 @@ function postLogin(username, password) {
   $.post( "/wildfly-helloworld-mdb/auth", JSON.stringify({ "username": username, "password": password }))
       .done(function( data ) {
         console.log('Response from auth login post: ' + data.toString());
-      },"json");
+        console.log("More: " + data['SUCCESS']);
+          console.log("More: " + typeof data['SUCCESS']);
 
-    // dev only until response is parsed
-    return true;
+          if(data['SUCCESS'] == 'TRUE') {
+              addToChat('','Login successfull',false);
+              initiateChat(username);
+          } else {
+              addToChat('','Login failed, try again',false);
+          }
+
+      },"json");
 }
 
 function cmdLogout(input) {
@@ -186,6 +192,7 @@ function addToChat(author, message, id) {
 
   $('.chat-container').append(msgContainer);
   $('body').scrollTop(1E10);
+  window.scrollTo(0,document.body.scrollHeight);
 }
 
 function postMessage(message) {
@@ -240,7 +247,7 @@ function showWelcome() {
 function initiateChat(username) {
 
     // Load in the online users, should include itself
-    var online_users = getOnlineUsers();
+    var online_users = getOnlineUsers(username);
     // foreach user, addToUsers(user)
         // code
 
@@ -256,7 +263,7 @@ var interval = null;
 
 function manageMessageListener(start) {
     if(start) {
-        interval = setInterval(messageListener, 500);
+        interval = setInterval(messageListener, 1000);
     } else {
         clearInterval(interval);
     }
@@ -282,9 +289,37 @@ function ceaseChat() {
     manageMessageListener(false);
 }
 
-function getOnlineUsers() {
-    $.post( "/wildfly-helloworld-mdb/getOnlineUsers")
+function getOnlineUsers(username) {
+    $.get( "/wildfly-helloworld-mdb/getOnlineUsers", JSON.stringify({"username":username}))
         .done(function( data ) {
             console.log('Response from message post: ' + data);
         });
+}
+
+function cmdPrivacy(input) {
+    input = input.substring(1).split(' ');
+    if(input[1]) {
+        var response = "/privacy "+input[1];
+        addToChat('',response,false);
+        //var post_privacy = postPrivacy(input);
+        if(post_privacy) {
+            addToChat('','Privacy updated',false);
+        } else {
+            addToChat('','Failed to update privacy',false);
+        }
+    } else {
+        // if not show the help for /login
+        input = '/help privacy';
+        cmdHelp(input);
+    }
+}
+
+function postPrivacy(input) {
+    $.post( "/wildfly-helloworld-mdb/privacy", JSON.stringify({ "tba":"tba" }))
+        .done(function( data ) {
+            console.log('Response from privacy post: ' + data);
+        });
+
+    // dev until parse response
+    return true;
 }
