@@ -1,8 +1,11 @@
 chatroom RMI
 ============================================================
 Author: Mykola Shevchenko, Henrik Skogmo
+
 Technologies: JMS, EJB, MDB, JSON, JPA  
+
 Summary: The `chatroom` webapp uses *JMS* and *EJB Message-Driven Bean* (MDB) to create and deploy a fully functional chat.  
+
 Target Product: WildFly  
 Source: <https://github.com/nshevchenko/chatroom>  
 
