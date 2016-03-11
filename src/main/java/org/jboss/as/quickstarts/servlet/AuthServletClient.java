@@ -79,6 +79,8 @@ public class AuthServletClient extends HttpServlet {
 
         boolean logout = req.getParameterMap().keySet().contains("logout");
 
+        
+
         if(logout) {
 
             JSONParserKeyValue jsonParser = new JSONParserKeyValue(req);
