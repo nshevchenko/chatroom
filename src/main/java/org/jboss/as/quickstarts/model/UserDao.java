@@ -20,4 +20,8 @@ public interface UserDao {
     void createUser(User user);
     void loggedInTrue(User user);
     void loggedInFalse(User user);
+    void privacy(User user);
+    void addFriend(User user);
+    void removeFriend(User user);
+
 }

@@ -42,5 +42,15 @@ public class EJBUserDao implements UserDao {
         entityManager.refresh(user);
     }
 
+    public void privacy(User user) {
+        entityManager.refresh(user);
+    }
 
+    public void addFriend(User user) {
+        entityManager.refresh(user);
+    }
+
+    public void removeFriend(User user) {
+        entityManager.refresh(user);
+    }
 }

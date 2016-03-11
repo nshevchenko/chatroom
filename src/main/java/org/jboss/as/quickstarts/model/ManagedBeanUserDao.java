@@ -92,4 +92,79 @@ public class ManagedBeanUserDao implements UserDao {
         }
     }
 
+
+
+    public void privacy(User user) {
+        try {
+            try {
+                utx.begin();
+                String query_string = "UPDATE User u SET privacy=:privacy WHERE u.username = :username";
+                Query query = entityManager.createQuery(query_string);
+                query.setParameter("privacy", user.getPrivacy());
+                query.setParameter("username", user.getUsername());
+                query.executeUpdate();
+                //entityManager.refresh(user);
+            } finally {
+                utx.commit();
+            }
+        } catch (Exception e) {
+            try {
+                utx.rollback();
+            } catch (SystemException se) {
+                throw new RuntimeException(se);
+            }
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void addFriend(User user) {
+        try {
+            try {
+                utx.begin();
+                String query_string = "UPDATE User u SET friends=:friends WHERE u.username = :username";
+                Query query = entityManager.createQuery(query_string);
+                System.out.println("user.getFriendsStr() " + user.getFriendsStr());
+                query.setParameter("friends", user.getFriendsStr());
+                query.setParameter("username", user.getUsername());
+                query.executeUpdate();
+                //entityManager.refresh(user);
+            } finally {
+                utx.commit();
+            }
+        } catch (Exception e) {
+            try {
+                System.out.println("exceptin " + e);
+                utx.rollback();
+            } catch (SystemException se) {
+                System.out.println("exceptin " + se);
+                throw new RuntimeException(se);
+            }
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void removeFriend(User user) {
+        try {
+            try {
+                utx.begin();
+                String query_string = "UPDATE User u SET friends=:friends WHERE u.username = :username";
+                Query query = entityManager.createQuery(query_string);
+                query.setParameter("friends", user.getFriendsStr());
+                query.setParameter("username", user.getUsername());
+                query.executeUpdate();
+                //entityManager.refresh(user);
+            } finally {
+                utx.commit();
+            }
+        } catch (Exception e) {
+            try {
+                utx.rollback();
+            } catch (SystemException se) {
+                throw new RuntimeException(se);
+            }
+            throw new RuntimeException(e);
+        }
+    }
+
+
 }

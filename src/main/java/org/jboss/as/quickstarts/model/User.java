@@ -56,9 +56,20 @@ public class User implements Serializable {
 
     private boolean loggedIn;   // session information
 
+    private String friends;
+    /*
+    Privacy ID :
+        0 - everyone
+        1 - friendsStr
+        2 - none
+    */
+    private int privacy;
 
     // empty constructor
-    public User(){}
+    public User(){
+        privacy = 0;
+        friends = "";
+    }
 
 
     // Constructor with username and password
@@ -66,6 +77,8 @@ public class User implements Serializable {
       this.username = username;
       this.password = password;
       this.loggedIn = false;
+      friends = "";
+      privacy = 0;
     }
 
 
@@ -74,6 +87,8 @@ public class User implements Serializable {
       this.username = username;
       this.password = password;
       this.loggedIn = loggedIn;
+      friends = "";
+      privacy = 0;
     }
 
     //  GETTERS
@@ -91,6 +106,16 @@ public class User implements Serializable {
     // get username
     public String getPassword() {
       return password;
+    }
+
+    // get friendsStr
+    public String getFriendsStr(){
+        return friends;
+    }
+
+    // privacy
+    public int getPrivacy(){
+        return privacy;
     }
 
     // get username
@@ -115,12 +140,37 @@ public class User implements Serializable {
       this.password = password;
     }
 
+    // set privacy
+    public void setPrivacy(int privacy){
+        this.privacy = privacy;
+    }
+
     // set if user is logged in
     public void setLoggedIn(boolean loggedIn) {
       this.loggedIn = loggedIn;
     }
 
     // UTIL METHODS
+
+    // add friend
+    public void addFriend(String username){
+        friends += username + ",";
+    }
+
+    // remove friend
+    public void removeFriend(String username){
+        String[] friendsStr = friends.split(",");
+        String result = "";
+
+        for(int i = 0; i < friendsStr.length; i++){
+            System.out.println(username + " " + friendsStr[i]);
+            if(!friendsStr[i].equals(username)){
+                result += friendsStr[i] + ",";
+            }
+        }
+        System.out.println("new result " + result);
+        friends = result;
+    }
 
     public String toString(){
       return id + " " + username;
