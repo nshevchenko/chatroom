@@ -190,13 +190,17 @@ public class User implements Serializable {
         //query select * users where user = user
         ArrayList<String> onlineUsers = new ArrayList<String>();
         String querySQL = "select u from User u";
-        User user = null;
+        User friend = null;
         try {
             Query query = entityManager.createQuery(querySQL);
             for (Object result : query.getResultList()) {
-                user = (User)result;           // cast the obj result from query to User obj
-                if(user.isLoggedIn())               // add online one user
-                    onlineUsers.add(user.getUsername());
+                friend = (User)result;                                 // cast the obj result from query to User obj
+                if(friend.isLoggedIn() && friend.getPrivacy() == 0)      // add online one user
+                    onlineUsers.add(friend.getUsername());
+
+                if( friend.getPrivacy() == 1 &&
+                    friend.getFriendsStr().indexOf(username) >= 0)
+                    onlineUsers.add(friend.getUsername());
             }
         } catch (NoResultException e){return null;}
         return onlineUsers;

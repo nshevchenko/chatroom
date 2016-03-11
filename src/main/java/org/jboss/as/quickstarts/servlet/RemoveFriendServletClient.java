@@ -18,7 +18,7 @@ import java.io.IOException;
 import org.jboss.as.quickstarts.model.JSONParserKeyValue;
 import org.jboss.as.quickstarts.model.User;
 import org.jboss.as.quickstarts.model.UserDao;
-
+import javax.json.stream.JsonGenerator;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.NoResultException;
@@ -52,24 +52,18 @@ public class RemoveFriendServletClient extends HttpServlet {
         // String data = getJsonDataFromRequest(req);
         JSONParserKeyValue jsonParser = new JSONParserKeyValue(req);
         String username = jsonParser.getValueByKey("username");
-
+        String friend = jsonParser.getValueByKey("friend");
+        User user = User.getUserFromUsername(entityManager, username);
+        user.removeFriend(friend);
+        userDao.removeFriend(user);
         // write response
         resp.setContentType("application/json");
-        JsonWriter jsonWriter = Json.createWriter(resp.getWriter());
-        JsonObject model = null;
-        if(logout(username)){
-            model = Json.createObjectBuilder()
-                    .add("SUCCESS", "TRUE")
-                    .add("username", username)
-                    .build();
-        } else {
-            model = Json.createObjectBuilder()
-                    .add("SUCCESS", "FALSE")
-                    .add("username", username)
-                    .build();
-        }
-        jsonWriter.writeObject(model);
-        jsonWriter.close();
+        final JsonGenerator generator = Json.createGenerator(resp.getWriter());     // init json generator
+
+        generator.writeStartObject();    // start obj
+        generator.write("SUCCESS", "TRUE");
+        generator.writeEnd();
+        generator.close();
     }
 
     /**

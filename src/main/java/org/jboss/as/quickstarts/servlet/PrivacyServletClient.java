@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
+import javax.json.stream.JsonGenerator;
 import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -59,11 +59,12 @@ public class PrivacyServletClient extends HttpServlet {
         userDao.privacy(user);
         // write response
         resp.setContentType("application/json");
-        JsonWriter jsonWriter = Json.createWriter(resp.getWriter());
-        JsonObject model = null;
+        final JsonGenerator generator = Json.createGenerator(resp.getWriter());     // init json generator
 
-        jsonWriter.writeObject(model);
-        jsonWriter.close();
+        generator.writeStartObject();    // start obj
+        generator.write("SUCCESS", "TRUE");
+        generator.writeEnd();
+        generator.close();
     }
 
     /**
