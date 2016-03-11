@@ -30,7 +30,9 @@ import java.io.IOException;
  */
 
 
-
+ /**
+  * Servlet responsible for storing messages by logged in users
+  */
 @WebServlet("/postMessage")
 public class PostMessageServletClient extends HttpServlet {
 
@@ -40,6 +42,10 @@ public class PostMessageServletClient extends HttpServlet {
     @Inject
     private EntityManager entityManager;
 
+    /**
+     * Post request responsible to check if user's loggedin to send message
+     * Persists the msg obj in database
+     */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 

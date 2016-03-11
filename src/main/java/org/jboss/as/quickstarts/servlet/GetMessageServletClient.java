@@ -30,17 +30,26 @@ import javax.persistence.NoResultException;
  * Created by nik on 10/03/2016.
  */
 
+ /**
+  * Servlet responsible for returning a list of messages with ID > last seen ID by user
+  */
+
 @WebServlet("/getMessages")
 public class GetMessageServletClient extends HttpServlet {
 
     @Inject
     private EntityManager entityManager;
 
+    /**
+     * Post request parsed and returns a list of messages by ID username and message (content)
+     */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         JSONParserKeyValue jsonParser = new JSONParserKeyValue(req);    // json parser
-        String idLastSeenMessageStr = jsonParser.getValueByKey("idLastSeen");// get id last seen msg as get paramater
+
+        // get id last seen msg as get paramater
+        String idLastSeenMessageStr = jsonParser.getValueByKey("idLastSeen");
         int idLastSeenMessage = -1; // init last seen int with -1
         if(idLastSeenMessageStr != null && !idLastSeenMessageStr.equals(""))
             idLastSeenMessage = Integer.parseInt(idLastSeenMessageStr);

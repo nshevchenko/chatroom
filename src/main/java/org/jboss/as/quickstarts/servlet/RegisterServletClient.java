@@ -17,9 +17,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Created by hs on 11/03/2016.
+ * Created by hs on 10/03/2016.
  */
 
+ /**
+  * Servlet responsible for register new users in database
+  */
 
 @WebServlet("/register")
 public class RegisterServletClient extends HttpServlet {
@@ -30,6 +33,9 @@ public class RegisterServletClient extends HttpServlet {
     @PersistenceContext
     private EntityManager em;
 
+    /**
+     * Post request to process user's regitration
+     */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -60,6 +66,9 @@ public class RegisterServletClient extends HttpServlet {
         jsonWriter.close();
     }
 
+    /**
+     * Persist's new user object in the database
+     */
     private boolean register(String username, String password) {
         String querySQL = "select u from User u where u.username = :username";
         User user = null;

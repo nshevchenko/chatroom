@@ -23,12 +23,21 @@ import org.jboss.as.quickstarts.model.User;
  * Created by hs on 10/03/2016.
  */
 
+
+ /**
+  * Servlet responsible for returning list of online users
+  */
+
 @WebServlet("/getOnlineUsers")
 public class GetOnlineUsersServletClient extends HttpServlet {
 
     @Inject
     private EntityManager entityManager;
 
+
+    /**
+     * Post request returns list online users
+     */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         JSONParserKeyValue jsonParser = new JSONParserKeyValue(req);    // json parser
@@ -36,7 +45,7 @@ public class GetOnlineUsersServletClient extends HttpServlet {
 
         // get online users through sql query
         ArrayList<String> onlineUsers = User.getOnlineUsers(entityManager, username);
-        
+
         // write response
         resp.setContentType("application/json");
         final JsonGenerator generator = Json.createGenerator(resp.getWriter());     // init json generator

@@ -28,12 +28,22 @@ import javax.persistence.NoResultException;
 
 
 
+     /**
+      * Client servlet responsible for Authentication
+      */
+
 @WebServlet("/auth")
 public class AuthServletClient extends HttpServlet {
 
     @Inject
     private EntityManager entityManager;
 
+    @Inject
+    private UserDao userDao;
+
+    /**
+     * Post request parsed and return TRUE or FALSE on result of authentication
+     */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -50,37 +60,25 @@ public class AuthServletClient extends HttpServlet {
             model = Json.createObjectBuilder()
                     .add("SUCCESS", "TRUE")
                     .add("username", username)
-                    .add("password", password)
                     .build();
         } else {
             model = Json.createObjectBuilder()
                     .add("SUCCESS", "FALSE")
                     .add("username", username)
-                    .add("password", password)
                     .build();
         }
         jsonWriter.writeObject(model);
         jsonWriter.close();
     }
 
-    @Inject
-    private UserDao userDao;
+    /**
+     * authenticate user by password
+     */
     private boolean auth(String username, String password){
         //query select * users where user = user
-        String querySQL = "select u from User u where u.username = :username";
-        User user = null;
-        try {
-            Query query = entityManager.createQuery(querySQL);
-            query.setParameter("username", username);
-            user = (User) query.getSingleResult(); // retrieve user from result
-
-        } catch (NoResultException e){
-            //System.out.println("NoResultException" + e);
-            return false;
-        }
+        User user = User.getUserFromUsername(entityManager, username);
         // check for login & set loggedin = true
         if(user.getPassword().equals(password)){
-
             user.setLoggedIn(true);
             userDao.loggedInTrue(user);
             return true;

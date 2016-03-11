@@ -37,6 +37,7 @@ import javax.persistence.NoResultException;
  - ID
  - username (author)
  - message (content)
+ - loggedIn (boolean)
  */
 
 @Entity
@@ -152,7 +153,7 @@ public class User implements Serializable {
     }
 
     // get user from query
-    public static User getUserFromQuery(EntityManager entityManager, String username) {
+    public static User getUserFromUsername(EntityManager entityManager, String username) {
         User user = null;
         String querySQL = "select u from User u where u.username = :username";
         try {

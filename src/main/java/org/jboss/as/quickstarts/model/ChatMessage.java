@@ -93,6 +93,9 @@ public class ChatMessage implements Serializable {
       return id + "." + username + ": "  + message;
     }
 
+    /**
+     * get messages by last seen ID
+     */
     public static ArrayList<ChatMessage> getMessages(EntityManager entityManager, int idLastSeen){
         //query select * users where user = user
         ArrayList<ChatMessage> chatMessages = new ArrayList<ChatMessage>();
