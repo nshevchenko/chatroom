@@ -185,8 +185,8 @@ function addToChat(author, message, id) {
     msgContainer    += '  <span class="chat-author">'+author+':</span>\n';
     msgContainer    += '  <span class="chat-message">'+message+'</span>\n';
   } else {
-    msgContainer = '<div class="chat-message-container">\n';
-    msgContainer    += '  <span class="chat-message server-message">'+message+'</span>\n';
+    msgContainer = '<div class="chat-message-container server-message">\n';
+    msgContainer    += '  <span class="chat-message">'+message+'</span>\n';
   }
   msgContainer    += '</div>\n';
 
@@ -243,8 +243,10 @@ function showWelcome() {
   cmdHelp('/help');
 }
 
+var username = null;
+function initiateChat(uname) {
 
-function initiateChat(username) {
+    username = uname;
 
     // Load in the online users, should include itself
     var online_users = getOnlineUsers(username);
@@ -258,7 +260,6 @@ function initiateChat(username) {
 }
 
 var interval = null;
-
 function manageMessageListener(start) {
     if(start) {
         interval = setInterval(messageListener, 1000);
@@ -269,6 +270,14 @@ function manageMessageListener(start) {
 
 function messageListener() {
     console.log('Message Listener: Checking for new messages');
+
+    // Check for the last seen ID in the chat
+    var id_last_seen = getLastSeenId();
+
+    $.get( "/wildfly-helloworld-mdb/getMessages", JSON.stringify({"username":username, "idLastSeen": id_last_seen}))
+        .done(function( data ) {
+            console.log('Response from getMessages get: ' + data);
+        });
 }
 
 function ceaseChat() {
@@ -285,6 +294,16 @@ function ceaseChat() {
 
     // Stop message listener
     manageMessageListener(false);
+}
+
+function getLastSeenId() {
+    var id = 0;
+    $('.chat-message-container').each(function(index) {
+        if($(this).data('id')) {
+            id = $(this).data('id');
+        }
+    });
+    return id;
 }
 
 function getOnlineUsers(username) {
