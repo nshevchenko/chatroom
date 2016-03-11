@@ -81,10 +81,6 @@ public class JSONParserKeyValue{
         } catch(JsonParsingException e){
             System.out.println(e);
         }
-
-        Iterator it = keyValues.entrySet().iterator();
-        while (it.hasNext())
-            Map.Entry pair = (Map.Entry)it.next();
     }
 
     public String getValueByKey(String key){
