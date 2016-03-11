@@ -400,11 +400,18 @@ function cmdPrivacy(input) {
     if(input[1]) {
         var response = "/privacy "+input[1];
         addToChat('',response,false);
-        var post_privacy = postPrivacy(input[1]);
-        if(post_privacy) {
-            addToChat('','Privacy updated',false);
-        } else {
-            addToChat('','Failed to update privacy',false);
+        if($.inArray(input[1], ["everyone", "noone", "friends"]) > -1) {
+            switch(input[1]) {
+                case "everyone":
+                    var post_privacy = postPrivacy(0);
+                    break;
+                case "noone":
+                    var post_privacy = postPrivacy(2);
+                    break;
+                case "friends":
+                    var post_privacy = postPrivacy(1);
+                    break;
+            }
         }
     } else {
         // if not show the help for /login
@@ -414,7 +421,7 @@ function cmdPrivacy(input) {
 }
 
 function postPrivacy(input) {
-    $.post( "/wildfly-helloworld-mdb/privacy", JSON.stringify({ "status":input }))
+    $.post( "/wildfly-helloworld-mdb/privacy", JSON.stringify({ "status":input.toString() }))
         .done(function( data ) {
             console.log('Response from privacy post: ' + data);
 
