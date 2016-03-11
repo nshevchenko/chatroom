@@ -248,8 +248,6 @@ function initiateChat(username) {
 
     // Load in the online users, should include itself
     var online_users = getOnlineUsers(username);
-    // foreach user, addToUsers(user)
-        // code
 
     // Set input prompt to be the username
     console.log('Setting prompt to: '+ username);
@@ -292,7 +290,7 @@ function ceaseChat() {
 function getOnlineUsers(username) {
     $.get( "/wildfly-helloworld-mdb/getOnlineUsers", JSON.stringify({"username":username}))
         .done(function( data ) {
-            console.log('Response from message post: ' + data);
+            console.log('Response from getOnlineUsers get: ' + data);
         });
 }
 
