@@ -18,4 +18,5 @@ package org.jboss.as.quickstarts.model;
 
 public interface UserDao {
     void createUser(User user);
+    void updateUser(User user);
 }

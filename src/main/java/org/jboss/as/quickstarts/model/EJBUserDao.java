@@ -34,4 +34,9 @@ public class EJBUserDao implements UserDao {
         entityManager.persist(user);
     }
 
+    public void updateUser(User user) {
+        entityManager.persist(user);
+    }
+
+
 }
