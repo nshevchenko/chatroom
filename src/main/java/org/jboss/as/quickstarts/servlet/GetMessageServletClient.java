@@ -18,18 +18,19 @@ import java.util.*;
 
 import java.io.IOException;
 import org.jboss.as.quickstarts.model.JSONParserKeyValue;
-import org.jboss.as.quickstarts.model.User;
+import org.jboss.as.quickstarts.model.ChatMessage;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.NoResultException;
+
 /**
- * Created by hs on 10/03/2016.
+ * Created by nik on 10/03/2016.
  */
 
 
 
-@WebServlet("/getOnlineUsers")
-public class GetOnlineUsersServletClient extends HttpServlet {
+@WebServlet("/getMessages")
+public class GetMessageServletClient extends HttpServlet {
 
     @Inject
     private EntityManager entityManager;
@@ -39,9 +40,10 @@ public class GetOnlineUsersServletClient extends HttpServlet {
 
         JSONParserKeyValue jsonParser = new JSONParserKeyValue(req);    // json parser
         String username = jsonParser.getValueByKey("username");         // get username as get paramater
-
+        String idLastSeenMessageStr = jsonParser.getValueByKey("idLastSeen");
+        int idLastSeenMessage = Integer.parseInt(idLastSeenMessageStr);
         // get online users through sql query
-        ArrayList<String> onlineUsers = getOnlineUsers(username);
+        ArrayList<ChatMessage> messages = getMessages(username);
 
         // write response
         resp.setContentType("application/json");
@@ -49,27 +51,23 @@ public class GetOnlineUsersServletClient extends HttpServlet {
 
         generator.writeStartObject();    // start obj
         int count = 0;
-        for(String str : onlineUsers){
-            generator.write(count+"", str);     // loop through users
-            count++;    // id as key
+        for(ChatMessage msg : messages){
+            generator.write(msg.getId() + "", msg.getMessage());     // loop through users
         }
         generator.writeEnd();
         generator.close();  // close
     }
 
-    private ArrayList<String> getOnlineUsers(String username){
+    private ArrayList<ChatMessage> getMessages(String username){
         //query select * users where user = user
-        ArrayList<String> onlineUsers = new ArrayList<String>();
-        String querySQL = "select u from User u";
-        User user = null;
+        ArrayList<ChatMessage> chatMessages = new ArrayList<ChatMessage>();
+        String querySQL = "select top 10 msg from CHATMESSAGE msg";
+        ChatMessage msg = null;
         try {
             Query query = entityManager.createQuery(querySQL);
-            for (Object result : query.getResultList()) {
-                user = (User)result;           // cast the obj result from query to User obj
-                if(user.isLoggedIn())               // add online one user
-                    onlineUsers.add(user.getUsername());
-            }
+            for (Object result : query.getResultList())
+                chatMessages.add((ChatMessage)result);  // cast the obj result from query to User obj
         } catch (NoResultException e){return null;}
-        return onlineUsers;
+        return chatMessages;
     }
 }

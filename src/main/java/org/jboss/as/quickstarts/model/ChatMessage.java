@@ -37,9 +37,12 @@ import javax.persistence.Table;
 @Table(name="CHATMESSAGE")
 public class ChatMessage implements Serializable {
 
-    private int id;
-    private String username;
-    private String message;
+    @Id
+    @GeneratedValue
+    private int id;             // id
+
+    private String username;    // username
+    private String message;     // message
 
     public ChatMessage(){}
 
@@ -50,10 +53,6 @@ public class ChatMessage implements Serializable {
 
 
     //  GETTERS
-
-    @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Column(name="chatmessage_id")
     public int getId() {
       return id;
     }
