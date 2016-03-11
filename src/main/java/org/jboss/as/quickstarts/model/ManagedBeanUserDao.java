@@ -53,19 +53,16 @@ public class ManagedBeanUserDao implements UserDao {
         try {
             try {
                 utx.begin();
-                System.out.println("updating isLoggedIn?? = " +user.isLoggedIn());
-                user.setLoggedIn(true);
-                System.out.println("updating isLoggedIn?? = " +user.isLoggedIn());
-                //entityManager.persist(user);
+                String query_string = "UPDATE User u SET loggedIn=true WHERE u.username = :username";
+                Query query = entityManager.createQuery(query_string);
+                query.setParameter("username", user.getUsername());
+                query.executeUpdate();
             } finally {
                 utx.commit();
-                entityManager.flush();
-                System.out.println("commiting isLoggedIn?? = "+ user.isLoggedIn());
             }
         } catch (Exception e) {
             try {
                 utx.rollback();
-                System.out.println("ROLLLBAAACK");
             } catch (SystemException se) {
                 throw new RuntimeException(se);
             }
