@@ -37,25 +37,24 @@ public class GetOnlineUsersServletClient extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        JSONParserKeyValue jsonParser = new JSONParserKeyValue(req);
-        String username = jsonParser.getValueByKey("username");
+        JSONParserKeyValue jsonParser = new JSONParserKeyValue(req);    // json parser
+        String username = jsonParser.getValueByKey("username");         // get username as get paramater
 
         // get online users through sql query
         ArrayList<String> onlineUsers = getOnlineUsers(username);
 
         // write response
         resp.setContentType("application/json");
-        final JsonGenerator generator = Json.createGenerator(resp.getWriter());
+        final JsonGenerator generator = Json.createGenerator(resp.getWriter());     // init json generator
 
-        generator.writeStartObject();
+        generator.writeStartObject();    // start obj
         int count = 0;
         for(String str : onlineUsers){
-            generator.write(count+"", str);
-            count++;
+            generator.write(count+"", str);     // loop through users
+            count++;    // id as key
         }
         generator.writeEnd();
-        generator.close();
-
+        generator.close();  // close
     }
 
     private ArrayList<String> getOnlineUsers(String username){
@@ -66,12 +65,11 @@ public class GetOnlineUsersServletClient extends HttpServlet {
         try {
             Query query = entityManager.createQuery(querySQL);
             for (Object result : query.getResultList()) {
-                onlineUsers.add(((User)result).getUsername());
+                User user = (User)result;
+                if(user.isLoggedIn())
+                    onlineUsers.add(user.getUsername());
             }
-        } catch (NoResultException e){
-            // System.out.println("NoResultException" + e);
-            return null;
-        }
+        } catch (NoResultException e){return null;}
         return onlineUsers;
     }
 }

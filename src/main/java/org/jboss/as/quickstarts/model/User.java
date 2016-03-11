@@ -90,7 +90,7 @@ public class User implements Serializable {
     }
 
     // get username
-    public boolean getLoggedIn() {
+    public boolean isLoggedIn() {
       return loggedIn;
     }
 
