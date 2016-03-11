@@ -41,7 +41,7 @@ $('.input-form').submit(function(e) {
   // If it doesn't start with a '/', than it's a chat message
   } else {
     console.log('CHAT MESSAGE DETECTED');
-    console.log('Sending POST to /message');
+    console.log('Sending POST to /postMessage');
     postMessage(input);
   }
 
@@ -196,10 +196,12 @@ function addToChat(author, message, id) {
 }
 
 function postMessage(message) {
-  $.post( "/wildfly-helloworld-mdb/message", { message: message })
+  $.post( "/wildfly-helloworld-mdb/postMessage", { "username": username, "message": message })
       .done(function( data ) {
         console.log('Response from message post: ' + data);
-      });
+
+          // TODO: Add the message to chat container
+      }, "json");
 }
 
 /*
@@ -277,6 +279,9 @@ function messageListener() {
     $.get( "/wildfly-helloworld-mdb/getMessages", JSON.stringify({"username":username, "idLastSeen": id_last_seen}))
         .done(function( data ) {
             console.log('Response from getMessages get: ' + data);
+
+            // TODO: Add each new message to the chat container
+
         });
 }
 
