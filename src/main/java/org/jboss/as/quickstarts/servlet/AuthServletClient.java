@@ -17,6 +17,8 @@ import javax.json.stream.JsonParsingException;
 import java.io.IOException;
 import org.jboss.as.quickstarts.model.JSONParserKeyValue;
 import org.jboss.as.quickstarts.model.User;
+import org.jboss.as.quickstarts.model.UserDao;
+
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.NoResultException;
@@ -100,6 +102,8 @@ public class AuthServletClient extends HttpServlet {
         jsonWriter.close();
     }
 
+    @Inject
+    private UserDao userDao;
     private boolean auth(String username, String password){
         //query select * users where user = user
         String querySQL = "select u from User u where u.username = :username";
@@ -115,8 +119,9 @@ public class AuthServletClient extends HttpServlet {
         }
         // check for login & set loggedin = true
         if(user.getPassword().equals(password)){
-            user.setLoggedIn(true);
-            //entityManager.persist(user);
+            //user.setLoggedIn(true);
+            userDao.updateUser(user);
+
             return true;
         }
         // otherwise return false
