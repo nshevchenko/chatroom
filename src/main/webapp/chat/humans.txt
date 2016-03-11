@@ -3,13 +3,15 @@
 
 # TEAM
 
-    <name> -- <role> -- <twitter>
+    Henrik O. Skogmo  -- Front-end -- @HOSkogmo
+    Mykola Shevchenko -- Back-end  -- @Niksheva
 
 # THANKS
 
-    <name>
+    Graham White for this assignment.
 
 # TECHNOLOGY COLOPHON
 
     CSS3, HTML5
     Apache Server Configs, jQuery, Modernizr, Normalize.css
+    Java EE, Wildfly AS

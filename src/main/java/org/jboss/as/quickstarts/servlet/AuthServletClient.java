@@ -76,58 +76,31 @@ public class AuthServletClient extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-        boolean logout = req.getParameterMap().keySet().contains("logout");
-
-        
-
-        if(logout) {
-
-            JSONParserKeyValue jsonParser = new JSONParserKeyValue(req);
-            String username = jsonParser.getValueByKey("username");
-            resp.setContentType("application/json");
-            JsonWriter jsonWriter = Json.createWriter(resp.getWriter());
-            JsonObject model = null;
-            if(logout(username)){
-                model = Json.createObjectBuilder()
-                        .add("SUCCESS", "TRUE")
-                        .add("username", username)
-                        .build();
-            } else {
-                model = Json.createObjectBuilder()
-                        .add("SUCCESS", "FALSE")
-                        .add("username", username)
-                        .build();
-            }
-            jsonWriter.writeObject(model);
-            jsonWriter.close();
-
+    
+        // Parse json request data
+        // String data = getJsonDataFromRequest(req);
+        JSONParserKeyValue jsonParser = new JSONParserKeyValue(req);
+        String username = jsonParser.getValueByKey("username");
+        String password = jsonParser.getValueByKey("password");
+        // write response
+        resp.setContentType("application/json");
+        JsonWriter jsonWriter = Json.createWriter(resp.getWriter());
+        JsonObject model = null;
+        if(auth(username, password)){
+            model = Json.createObjectBuilder()
+                    .add("SUCCESS", "TRUE")
+                    .add("username", username)
+                    .add("password", password)
+                    .build();
         } else {
-            // Parse json request data
-            // String data = getJsonDataFromRequest(req);
-            JSONParserKeyValue jsonParser = new JSONParserKeyValue(req);
-            String username = jsonParser.getValueByKey("username");
-            String password = jsonParser.getValueByKey("password");
-            // write response
-            resp.setContentType("application/json");
-            JsonWriter jsonWriter = Json.createWriter(resp.getWriter());
-            JsonObject model = null;
-            if(auth(username, password)){
-                model = Json.createObjectBuilder()
-                        .add("SUCCESS", "TRUE")
-                        .add("username", username)
-                        .add("password", password)
-                        .build();
-            } else {
-                model = Json.createObjectBuilder()
-                        .add("SUCCESS", "FALSE")
-                        .add("username", username)
-                        .add("password", password)
-                        .build();
-            }
-            jsonWriter.writeObject(model);
-            jsonWriter.close();
+            model = Json.createObjectBuilder()
+                    .add("SUCCESS", "FALSE")
+                    .add("username", username)
+                    .add("password", password)
+                    .build();
         }
+        jsonWriter.writeObject(model);
+        jsonWriter.close();
     }
 
     @Inject
@@ -154,22 +127,5 @@ public class AuthServletClient extends HttpServlet {
         }
         // otherwise return false
         return false;
-    }
-
-    private boolean logout(String username) {
-        //query select * users where user = user
-        String querySQL = "select u from User u where u.username = :username";
-        User user = null;
-        try {
-            Query query = entityManager.createQuery(querySQL);
-            query.setParameter("username", username);
-            user = (User) query.getSingleResult(); // retrieve user from result
-        } catch (NoResultException e){
-            //System.out.println("NoResultException" + e);
-            return false;
-        }
-        user.setLoggedIn(false);
-        userDao.loggedInFalse(user);
-        return true;
     }
 }
