@@ -92,16 +92,18 @@ public class ChatMessage implements Serializable {
     public String toString(){
       return id + "." + username + ": "  + message;
     }
-    
-    public static ArrayList<ChatMessage> getMessages(EntityManager entityManager, String username){
+
+    public static ArrayList<ChatMessage> getMessages(EntityManager entityManager, int idLastSeen){
         //query select * users where user = user
         ArrayList<ChatMessage> chatMessages = new ArrayList<ChatMessage>();
-        String querySQL = "SELECT m FROM ChatMessage m ORDER BY m.id desc"; //
+        System.out.println("trying with idLastSeen " + idLastSeen);
+        String querySQL = "select m from ChatMessage m where m.id > :idLastSeen"; //ORDER BY m.id desc
 
         ChatMessage msg = null;
         try {
-            Query query = entityManager.createQuery(querySQL);
-            query.setMaxResults(5);
+            Query query = entityManager.createQuery(querySQL)
+            .setParameter("idLastSeen", idLastSeen)
+            .setMaxResults(5);
             for (Object result : query.getResultList())
                 chatMessages.add((ChatMessage)result);  // cast the obj result from query to User obj
         } catch (NoResultException e){return null;}

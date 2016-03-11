@@ -134,7 +134,7 @@ public class User implements Serializable {
     }
 
 
-    // get a list of online users 
+    // get a list of online users
     public static ArrayList<String> getOnlineUsers(EntityManager entityManager, String username){
         //query select * users where user = user
         ArrayList<String> onlineUsers = new ArrayList<String>();
