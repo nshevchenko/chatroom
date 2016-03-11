@@ -207,15 +207,26 @@ function postMessage(message) {
 /*
 * Adding a user to the list of users
 * */
-function addToUsers(user) {
-  // Add the username to the list of users
-  $('.users-container ul').append('<li>'+user+'</li>');
+function addToUsers(id, user) {
+    // Check if the user is already added
+    var exists = false;
+    $('.users-container ul li').each(function(index) {
+       if($(this).text() == user) {
+           exists = true;
+       }
+    });
 
-  // Increment the counter of online users
-  var users_online = $('.users-online').text();
-  users_online = parseInt(users_online);
-  users_online++;
-  $('.users-online').text(users_online.toString());
+    if(!exists) {
+        // Add the username to the list of users
+        $('.users-container ul').append('<li data-id="'+id+'">'+user+'</li>');
+
+        // Increment the counter of online users
+        var users_online = $('.users-online').text();
+        users_online = parseInt(users_online);
+        users_online++;
+        $('.users-online').text(users_online.toString());
+    }
+
 }
 
 /*
@@ -276,6 +287,8 @@ function messageListener() {
     // Check for the last seen ID in the chat
     var id_last_seen = getLastSeenId();
 
+    getOnlineUsers(username);
+
     $.get( "/wildfly-helloworld-mdb/getMessages", JSON.stringify({"username":username, "idLastSeen": id_last_seen}))
         .done(function( data ) {
             console.log('Response from getMessages get: ' + data);
@@ -314,7 +327,9 @@ function getLastSeenId() {
 function getOnlineUsers(username) {
     $.get( "/wildfly-helloworld-mdb/getOnlineUsers", JSON.stringify({"username":username}))
         .done(function( data ) {
-            console.log('Response from getOnlineUsers get: ' + data);
+            for(var k in data) {
+                addToUsers(k, data[k]);
+            }
         });
 }
 
