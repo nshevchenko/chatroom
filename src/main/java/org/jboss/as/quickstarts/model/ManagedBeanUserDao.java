@@ -48,4 +48,23 @@ public class ManagedBeanUserDao implements UserDao {
             throw new RuntimeException(e);
         }
     }
+
+    public void updateUser(User user) {
+        try {
+            try {
+                utx.begin();
+                user.setLoggedIn(true);
+                //entityManager.persist(user);
+            } finally {
+                utx.commit();
+            }
+        } catch (Exception e) {
+            try {
+                utx.rollback();
+            } catch (SystemException se) {
+                throw new RuntimeException(se);
+            }
+            throw new RuntimeException(e);
+        }
+    }
 }
