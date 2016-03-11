@@ -289,7 +289,7 @@ function messageListener() {
 
     getOnlineUsers(username);
 
-    $.get( "/wildfly-helloworld-mdb/getMessages", JSON.stringify({"username":username, "idLastSeen": id_last_seen}))
+    $.get( "/wildfly-helloworld-mdb/getMessages", JSON.stringify({"username":username, "idLastSeen": id_last_seen.toString()}))
         .done(function( data ) {
             console.log('Response from getMessages get: ' + data);
             // TODO: Add each new message to the chat container
