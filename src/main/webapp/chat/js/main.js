@@ -339,7 +339,7 @@ function initiateChat(uname) {
 var interval = null;
 function manageMessageListener(start) {
     if(start) {
-        interval = setInterval(messageListener, 3000);
+        interval = setInterval(messageListener, 300);
     } else {
         clearInterval(interval);
     }

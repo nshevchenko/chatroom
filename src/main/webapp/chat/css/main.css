@@ -112,7 +112,7 @@ textarea {
 .chat-container {
     float: left;
     width: 82%;
-    overflow-y:scroll;
+    overflow-y:hidden;
     margin-bottom: 22px;
     margin-left: 10px;
     margin-top: 12px;
