@@ -36,6 +36,9 @@ $('.input-form').submit(function(e) {
         case 'privacy':
             cmdPrivacy(input);
             break;
+        case 'friends':
+            cmdFriends(input);
+            break;
 
     }
   // If it doesn't start with a '/', than it's a chat message
@@ -60,7 +63,8 @@ function cmdHelp(input) {
                  + "&nbsp;&nbsp;/privacy friends - will make you only visible for friends<br/>"
                  + "&nbsp;&nbsp;/privacy everyone - will make you visible for everyone<br/>"
                  + "&nbsp;&nbsp;/privacy noone - will make you invisible for everyone<br/>";
-    var friends  = "- /friends {add,remove} elliot - will add/remove elliot<br/>";
+    var friends  = "- /friends - will show your current list of friends<br />"
+                 + "&nbsp;&nbsp;/friends {add,remove} elliot - will add/remove elliot<br/>";
 
   var response = "";
 
@@ -176,6 +180,60 @@ function postRegister(username, password) {
       });
 }
 
+function cmdFriends(input) {
+    input = input.substring(1).split(' ');
+    var options = ['add', 'remove'];
+    if(input[1] && input[2]) {
+        var response = "/friends " + input[1] + " " + input[2];
+        addToChat('', response, false);
+        if (input[1] == 'add') {
+            var post_add_friend = postAddFriend(input[2]);
+        } else if (input[1] == 'remove') {
+            var post_remove_friend = postRemoveFriend(input[2]);
+        }
+
+    } else {
+        // if not show the help for /friends
+        var response = "/friends"
+        addToChat('', response, false);
+        var post_get_friends = postGetFriends();
+    }
+}
+
+function postGetFriends() {
+    $.post( "/wildfly-helloworld-mdb/getFriends", JSON.stringify({ "username": username }))
+        .done(function( data ) {
+            if(data['SUCCESS'] == 'TRUE') {
+                addToChat('','Here is a list of your friends! :)',false);
+            } else {
+                addToChat('','Could not find your friends! Try again.',false);
+            }
+        });
+}
+
+function postAddFriend(friend) {
+    $.post( "/wildfly-helloworld-mdb/addFriend", JSON.stringify({ "username": username, "friend": friend }))
+        .done(function( data ) {
+            if(data['SUCCESS'] == 'TRUE') {
+                addToChat('','Added a friend! :)',false);
+            } else {
+                addToChat('','Could not add a friend! Try again.',false);
+            }
+        });
+}
+
+function postRemoveFriend(friend) {
+    $.post( "/wildfly-helloworld-mdb/removeFriend", JSON.stringify({ "username": username, "friend": friend }))
+        .done(function( data ) {
+            if(data['SUCCESS'] == 'TRUE') {
+                addToChat('','Removed a friend :(',false);
+            } else {
+                addToChat('','Could not remove a friend! Try again.',false);
+            }
+
+        });
+}
+
 /* Takes an author, string, and boolean for server-message and posts it to
 the chat-container */
 function addToChat(author, message, id) {
@@ -283,7 +341,7 @@ function initiateChat(uname) {
 var interval = null;
 function manageMessageListener(start) {
     if(start) {
-        interval = setInterval(messageListener, 1000);
+        interval = setInterval(messageListener, 300);
     } else {
         clearInterval(interval);
     }
@@ -347,7 +405,7 @@ function cmdPrivacy(input) {
     if(input[1]) {
         var response = "/privacy "+input[1];
         addToChat('',response,false);
-        //var post_privacy = postPrivacy(input);
+        var post_privacy = postPrivacy(input[1]);
         if(post_privacy) {
             addToChat('','Privacy updated',false);
         } else {
@@ -361,11 +419,16 @@ function cmdPrivacy(input) {
 }
 
 function postPrivacy(input) {
-    $.post( "/wildfly-helloworld-mdb/privacy", JSON.stringify({ "tba":"tba" }))
+    $.post( "/wildfly-helloworld-mdb/privacy", JSON.stringify({ "status":input }))
         .done(function( data ) {
             console.log('Response from privacy post: ' + data);
+
+            if(data['SUCCESS'] == 'TRUE') {
+                addToChat('','Privacy updated!',false);
+            } else {
+                addToChat('','Could not update privacy! Try again.',false);
+            }
+
         });
 
-    // dev until parse response
-    return true;
 }
