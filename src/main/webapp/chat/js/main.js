@@ -205,9 +205,9 @@ function postGetFriends() {
         .done(function( data ) {
             if(data['SUCCESS'] == 'TRUE') {
 
-                var response = "Here is a list of your friends! :)<br/>" + data['friends'];
+                var response = "Here is a list of your friends! :) <br/>" + data["friends"];
 
-                addToChat('','Here is a list of your friends! :)',false);
+                addToChat('',response,false);
             } else {
                 addToChat('','Could not find your friends! Try again.',false);
             }
@@ -424,7 +424,7 @@ function cmdPrivacy(input) {
 }
 
 function postPrivacy(input) {
-    $.post( "/wildfly-helloworld-mdb/privacy", JSON.stringify({ "status":input.toString() }))
+    $.post( "/wildfly-helloworld-mdb/privacy", JSON.stringify({ "username": username, "status":input.toString() }))
         .done(function( data ) {
             console.log('Response from privacy post: ' + data);
 
