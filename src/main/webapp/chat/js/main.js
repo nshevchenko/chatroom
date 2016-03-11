@@ -312,12 +312,7 @@ function removeUser(user) {
 * The user doesn't have to be logged in to view this.
 * */
 function showWelcome() {
-    var welcome = " __      __       .__                               \n"
-                + "/  \    /  \ ____ |  |   ____  ____   _____   ____  \n"
-                + "\   \/\/   // __ \|  | _/ ___\/  _ \ /     \_/ __ \ \n"
-                + " \        /\  ___/|  |_\  \__(  <_> )  Y Y  \  ___/ "
-                + "  \__/\  /  \___  >____/\___  >____/|__|_|  /\___  >"
-                + "       \/       \/          \/            \/     \/ ";
+    var welcome = "<ul>Welcome to the chat!</ul>";
     addToChat('',welcome);
   cmdHelp('/help');
 }
@@ -341,7 +336,7 @@ function initiateChat(uname) {
 var interval = null;
 function manageMessageListener(start) {
     if(start) {
-        interval = setInterval(messageListener, 300);
+        interval = setInterval(messageListener, 3000);
     } else {
         clearInterval(interval);
     }
